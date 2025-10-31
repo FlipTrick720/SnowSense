@@ -1,0 +1,64 @@
+.notification-list-container {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notification-list-container h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #333;
+  font-size: 24px;
+}
+
+.notification-count {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.loading-message,
+.empty-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+.loading-message {
+  font-style: italic;
+}
+
+.empty-message {
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border: 1px dashed #ddd;
+}
+
+/* Responsive design for desktop screens (1024px+) */
+@media (min-width: 1024px) {
+  .notification-list-container {
+    padding: 32px;
+  }
+  
+  .notification-list-container h2 {
+    font-size: 28px;
+  }
+  
+  .notification-count {
+    font-size: 15px;
+  }
+  
+  .loading-message,
+  .empty-message {
+    font-size: 17px;
+    padding: 50px 20px;
+  }
+}
