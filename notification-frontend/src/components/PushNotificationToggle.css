@@ -1,0 +1,104 @@
+.push-notification-toggle {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.toggle-info h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.toggle-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.toggle-button {
+  padding: 12px 28px;
+  border: 2px solid white;
+  background: transparent;
+  color: white;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.toggle-button:hover:not(:disabled) {
+  background: white;
+  color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.toggle-button.subscribed {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.toggle-button.loading {
+  opacity: 0.7;
+}
+
+.subscription-info {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.subscription-info small {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.alert {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.alert-success {
+  background: rgba(76, 175, 80, 0.9);
+  color: white;
+}
+
+.alert-error {
+  background: rgba(244, 67, 54, 0.9);
+  color: white;
+}
+
+.alert-warning {
+  background: rgba(255, 152, 0, 0.9);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .toggle-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toggle-button {
+    width: 100%;
+  }
+}

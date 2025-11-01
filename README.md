@@ -1,93 +1,250 @@
-# SnowSense
+# Notification System with Push Notifications (AI Generated)
 
+A full-stack notification system with Firebase Cloud Messaging (FCM) push notifications. Built with React (frontend) and Spring Boot (backend).
 
+## Features
 
-## Getting started
+- ✅ Create and view notifications
+- ✅ Real-time push notifications (even when browser is closed!)
+- ✅ Firebase Cloud Messaging integration
+- ✅ Service worker for background notifications
+- ✅ Responsive UI with modern design
+- ✅ Environment variable configuration
+- ✅ In-memory storage (easily upgradeable to database)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Tech Stack
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+**Frontend:**
+- React 19
+- Vite
+- Firebase SDK 10.14.1
+- Axios
+- Service Workers
 
-## Add your files
+**Backend:**
+- Java 17
+- Spring Boot 3.2.0
+- Firebase Admin SDK
+- Maven
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- Java 17+
+- Maven
+- Firebase project with Cloud Messaging enabled
+
+### 1. Clone and Setup
+
+```bash
+git clone <your-repo-url>
+cd proof-of-concept-website-with-notification
+```
+
+### 2. Configure Environment Variables
+
+**Frontend:**
+```bash
+cd notification-frontend
+cp .env.example .env
+# Edit .env with your Firebase credentials
+```
+
+**Backend:**
+```bash
+cd notification-backend
+cp .env.example .env
+# Edit .env with your Firebase service account path
+```
+
+See [ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md) for detailed instructions.
+
+### 3. Install Dependencies
+
+**Frontend:**
+```bash
+cd notification-frontend
+npm install
+```
+
+**Backend:**
+```bash
+cd notification-backend
+mvn clean install
+```
+
+### 4. Run the Application
+
+**Terminal 1 - Backend:**
+```bash
+cd notification-backend
+mvn spring-boot:run
+```
+
+**Terminal 2 - Frontend:**
+```bash
+cd notification-frontend
+npm run dev
+```
+
+Open http://localhost:5173 in your browser.
+
+### 5. Enable Push Notifications
+
+1. Click the "Enable" button on the push notification toggle
+2. Grant browser permission when prompted
+3. Create a notification using the form
+4. You'll receive a push notification! 🎉
+
+## Project Structure
 
 ```
-cd existing_repo
-git remote add origin https://git.uibk.ac.at/csbc9634/snowsense.git
-git branch -M main
-git push -uf origin main
+.
+├── notification-frontend/          # React frontend
+│   ├── src/
+│   │   ├── components/            # React components
+│   │   ├── services/              # API and push notification services
+│   │   └── config/                # Firebase configuration
+│   ├── public/                    # Static assets
+│   └── .env.example               # Environment variables template
+│
+├── notification-backend/           # Spring Boot backend
+│   ├── src/main/java/com/notification/
+│   │   ├── controller/            # REST controllers
+│   │   ├── service/               # Business logic
+│   │   ├── repository/            # Data access
+│   │   ├── model/                 # Domain models
+│   │   └── config/                # Configuration
+│   └── .env.example               # Environment variables template
+│
+├── ENV_SETUP_GUIDE.md             # Environment setup instructions
+├── FIREBASE_SETUP_GUIDE.md        # Firebase configuration guide
+└── PUSH_NOTIFICATIONS_README.md   # Push notifications documentation
 ```
 
-## Integrate with your tools
+## API Endpoints
 
-- [ ] [Set up project integrations](https://git.uibk.ac.at/csbc9634/snowsense/-/settings/integrations)
+### Notifications
 
-## Collaborate with your team
+- `POST /api/notifications` - Create a notification
+- `GET /api/notifications` - Get all notifications
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+### Push Subscriptions
 
-## Test and Deploy
+- `POST /api/notifications/subscribe` - Subscribe to push notifications
+- `POST /api/notifications/unsubscribe` - Unsubscribe from push notifications
 
-Use the built-in continuous integration in GitLab.
+## Documentation
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+- **[ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md)** - Environment variables setup
+- **[FIREBASE_SETUP_GUIDE.md](./FIREBASE_SETUP_GUIDE.md)** - Firebase configuration
+- **[PUSH_NOTIFICATIONS_README.md](./PUSH_NOTIFICATIONS_README.md)** - Push notifications overview
+- **[SETUP_CHECKLIST.md](./SETUP_CHECKLIST.md)** - Quick setup checklist
 
-***
+## Development
 
-# Editing this README
+### Frontend Development
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+```bash
+cd notification-frontend
+npm run dev          # Start dev server
+npm run build        # Build for production
+npm run test         # Run tests
+npm run lint         # Lint code
+```
 
-## Suggestions for a good README
+### Backend Development
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+```bash
+cd notification-backend
+mvn spring-boot:run  # Start server
+mvn test             # Run tests
+mvn clean package    # Build JAR
+```
 
-## Name
-Choose a self-explaining name for your project.
+## Testing Push Notifications
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### Test Foreground Notifications
+1. Keep the app open
+2. Create a notification
+3. Should see notification popup
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### Test Background Notifications
+1. Enable push notifications
+2. Minimize or close the browser tab
+3. Create a notification from another device/browser
+4. Should receive OS notification
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## Browser Support
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+- ✅ Chrome/Edge (Desktop & Android)
+- ✅ Firefox (Desktop & Android)
+- ✅ Safari 16.4+ (macOS & iOS)
+- ✅ Opera
+- ❌ Internet Explorer
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Security
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+- Environment variables for sensitive credentials
+- Firebase service account key not committed to git
+- CORS configuration for API security
+- HTTPS required in production for push notifications
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## Deployment
+
+### Frontend (Vercel/Netlify)
+
+1. Connect your git repository
+2. Add environment variables in dashboard
+3. Deploy!
+
+### Backend (Heroku/AWS)
+
+1. Set environment variables
+2. Upload Firebase service account key securely
+3. Deploy JAR file
+
+See [ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md) for detailed deployment instructions.
+
+## Troubleshooting
+
+### Push notifications not working?
+- Check [TROUBLESHOOTING_STUCK_TOKEN.md](./TROUBLESHOOTING_STUCK_TOKEN.md)
+- Verify Firebase Cloud Messaging is enabled
+- Check browser console for errors
+- Try in incognito mode
+
+### Backend won't start?
+- Check `.env` file exists and has correct values
+- Verify Firebase service account path is correct
+- Check Java version (requires 17+)
+
+### Frontend build fails?
+- Check `.env` file exists
+- Run `npm run generate-sw` manually
+- Clear node_modules and reinstall
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+MIT License - feel free to use this project for learning or production!
+
+## Acknowledgments
+
+- Firebase for Cloud Messaging
+- Spring Boot team
+- React team
+- Vite team
+
+---
+
+**Need help?** Check the documentation files or open an issue!
