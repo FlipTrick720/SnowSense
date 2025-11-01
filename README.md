@@ -1,4 +1,4 @@
-# Notification System with Push Notifications
+# Notification System with Push Notifications (AI Generated)
 
 A full-stack notification system with Firebase Cloud Messaging (FCM) push notifications. Built with React (frontend) and Spring Boot (backend).
 
