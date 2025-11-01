@@ -1,2 +1,13 @@
 .vscode/
 .kiro/
+
+# Firebase credentials
+firebase-service-account.json
+
+# Environment variables (keep .env.example)
+.env
+.env.local
+.env.*.local
+
+# Service worker (generated from template)
+notification-frontend/public/firebase-messaging-sw.js

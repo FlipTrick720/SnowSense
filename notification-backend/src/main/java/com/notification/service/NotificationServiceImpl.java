@@ -19,10 +19,13 @@ import java.util.stream.Collectors;
 public class NotificationServiceImpl implements NotificationService {
     
     private final NotificationRepository notificationRepository;
+    private final PushNotificationService pushNotificationService;
     private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
     
-    public NotificationServiceImpl(NotificationRepository notificationRepository) {
+    public NotificationServiceImpl(NotificationRepository notificationRepository,
+                                   PushNotificationService pushNotificationService) {
         this.notificationRepository = notificationRepository;
+        this.pushNotificationService = pushNotificationService;
     }
     
     @Override
@@ -41,6 +44,9 @@ public class NotificationServiceImpl implements NotificationService {
         
         // Save to repository
         Notification savedNotification = notificationRepository.save(notification);
+        
+        // Send push notification to all subscribers
+        pushNotificationService.sendPushNotification(savedNotification);
         
         // Transform to DTO
         return toDTO(savedNotification);

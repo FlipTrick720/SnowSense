@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import NotificationForm from './components/NotificationForm';
 import NotificationList from './components/NotificationList';
+import PushNotificationToggle from './components/PushNotificationToggle';
 import { getAllNotifications } from './services/notificationService';
+import { setupForegroundMessageListener } from './services/pushNotificationService';
 import './App.css';
 
 function App() {
@@ -12,6 +14,13 @@ function App() {
   // Fetch notifications on component mount
   useEffect(() => {
     fetchNotifications();
+
+    // Setup listener for foreground push notifications
+    setupForegroundMessageListener((payload) => {
+      console.log('Received push notification:', payload);
+      // Refresh notifications list when push is received
+      fetchNotifications();
+    });
   }, []);
 
   const fetchNotifications = async () => {
@@ -34,8 +43,9 @@ function App() {
   };
 
   const handleNotificationCreated = (newNotification) => {
-    // Add new notification to the top of the list
-    setNotifications(prev => [newNotification, ...prev]);
+    // Refresh the entire list from backend to ensure consistency
+    // This also handles the case where push notifications trigger a refresh
+    fetchNotifications();
   };
 
   return (
@@ -55,6 +65,8 @@ function App() {
           </div>
         )}
 
+        <PushNotificationToggle />
+        
         <NotificationForm onNotificationCreated={handleNotificationCreated} />
         
         <NotificationList 
