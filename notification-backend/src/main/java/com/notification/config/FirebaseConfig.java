@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import jakarta.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
 
 @Configuration
 public class FirebaseConfig {
@@ -20,19 +23,22 @@ public class FirebaseConfig {
     @Value("${firebase.service-account-key-path:}")
     private String serviceAccountKeyPath;
     
+    @Value("${firebase.service-account-key-base64:}")
+    private String serviceAccountKeyBase64;
+    
     @PostConstruct
     public void initialize() {
         try {
-            if (serviceAccountKeyPath == null || serviceAccountKeyPath.isEmpty()) {
-                logger.warn("Firebase service account key path not configured. Push notifications will not work.");
-                logger.warn("Set 'firebase.service-account-key-path' in application.properties");
+            InputStream serviceAccountStream = getServiceAccountStream();
+            
+            if (serviceAccountStream == null) {
+                logger.warn("Firebase service account key not configured. Push notifications will not work.");
+                logger.warn("Set either 'firebase.service-account-key-path' or 'firebase.service-account-key-base64'");
                 return;
             }
             
-            FileInputStream serviceAccount = new FileInputStream(serviceAccountKeyPath);
-            
             FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccountStream))
                     .build();
             
             if (FirebaseApp.getApps().isEmpty()) {
@@ -43,5 +49,22 @@ public class FirebaseConfig {
             logger.error("Failed to initialize Firebase: {}", e.getMessage());
             logger.warn("Push notifications will not work without proper Firebase configuration");
         }
+    }
+    
+    private InputStream getServiceAccountStream() throws IOException {
+        // Try base64 encoded credentials first (for cloud deployment)
+        if (serviceAccountKeyBase64 != null && !serviceAccountKeyBase64.isEmpty()) {
+            logger.info("Loading Firebase credentials from base64 environment variable");
+            byte[] decodedKey = Base64.getDecoder().decode(serviceAccountKeyBase64);
+            return new ByteArrayInputStream(decodedKey);
+        }
+        
+        // Fall back to file path (for local development)
+        if (serviceAccountKeyPath != null && !serviceAccountKeyPath.isEmpty()) {
+            logger.info("Loading Firebase credentials from file: {}", serviceAccountKeyPath);
+            return new FileInputStream(serviceAccountKeyPath);
+        }
+        
+        return null;
     }
 }

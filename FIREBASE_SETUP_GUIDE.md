@@ -1,4 +1,4 @@
-# Firebase Push Notifications Setup Guide
+# Firebase Push Notifications Setup Guide (AI Generated)
 
 ## Prerequisites
 
