@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: snowsense
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    region: frankfurt
+    branch: main
+    envVars:
+      - key: SERVER_PORT
+        value: 8080
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://snowsense.onrender.com
+      - key: FIREBASE_SERVICE_ACCOUNT_BASE64
+        sync: false
+    healthCheckPath: /api/health
