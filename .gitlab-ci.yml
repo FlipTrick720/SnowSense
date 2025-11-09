@@ -1,0 +1,58 @@
+stages:
+  - build
+  - test
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository
+    - notification-frontend/node_modules/
+
+build-app:
+  stage: build
+  image: eclipse-temurin:17-jdk
+  before_script:
+    - apt-get update && apt-get install -y nodejs npm
+  script:
+    - echo "Building React frontend..."
+    - cd notification-frontend
+    - npm ci
+    - npm run build
+    - cd ..
+    
+    - echo "Copying frontend to Spring Boot static resources..."
+    - rm -rf notification-backend/src/main/resources/static/*
+    - mkdir -p notification-backend/src/main/resources/static
+    - cp -r notification-frontend/dist/* notification-backend/src/main/resources/static/
+    
+    - echo "Building Spring Boot backend..."
+    - cd notification-backend
+    - mvn clean package -DskipTests
+    - cd ..
+  artifacts:
+    paths:
+      - notification-backend/target/*.jar
+    expire_in: 1 week
+
+test-frontend:
+  stage: test
+  image: node:20
+  script:
+    - cd notification-frontend
+    - npm ci
+    - npm run test
+  only:
+    - merge_requests
+    - main
+
+# Optional: Docker build job
+# build-docker:
+#   stage: build
+#   image: docker:latest
+#   services:
+#     - docker:dind
+#   script:
+#     - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+#     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
