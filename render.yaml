@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: snowsense
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    region: frankfurt
+    branch: develop/deploy-for-render
+    envVars:
+      # Backend runtime variables
+      - key: SERVER_PORT
+        value: 8080
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://snowsense.onrender.com
+      - key: FIREBASE_SERVICE_ACCOUNT_BASE64
+        sync: false
+      # Frontend build-time variables (for Docker build)
+      - key: VITE_FIREBASE_API_KEY
+        sync: false
+      - key: VITE_FIREBASE_AUTH_DOMAIN
+        sync: false
+      - key: VITE_FIREBASE_PROJECT_ID
+        sync: false
+      - key: VITE_FIREBASE_STORAGE_BUCKET
+        sync: false
+      - key: VITE_FIREBASE_MESSAGING_SENDER_ID
+        sync: false
+      - key: VITE_FIREBASE_APP_ID
+        sync: false
+      - key: VITE_FIREBASE_VAPID_KEY
+        sync: false
+      - key: VITE_API_URL
+        value: https://snowsense.onrender.com
+    healthCheckPath: /api/health
