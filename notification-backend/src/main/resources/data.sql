@@ -1,5 +1,5 @@
 -- COMPLETE LIST: FREIZEITTICKET TIROL & SNOWCARD TIROL SKI RESORTS
--- All resorts included in either or both passes (duplicates removed)
+-- All resorts included in either or both passes (95 resorts)
 -- Coordinates are base station/main lift locations where available
 -- Elevation is maximum altitude (top station)
 
