@@ -21,15 +21,18 @@ public class WeatherController {
     
     /**
      * Trigger weather scraping for all ski resorts
-     * GET /api/weather/scrape
+     * POST /api/weather/scrape
+     * 
+     * Note: Weather data is automatically scraped every 15 minutes
      */
-    @GetMapping("/scrape")
+    @PostMapping("/scrape")
     public ResponseEntity<Map<String, String>> scrapeWeather() {
         weatherService.scrapeWeatherForAllResorts();
         
         Map<String, String> response = new HashMap<>();
         response.put("status", "success");
-        response.put("message", "Weather data scraped and saved to database. Check terminal for details.");
+        response.put("message", "Weather data scrape triggered successfully");
+        response.put("note", "Automatic scraping runs every 15 minutes");
         
         return ResponseEntity.ok(response);
     }

@@ -34,10 +34,9 @@ public class WeatherService {
     
     /**
      * Scrape weather data for all ski resorts
-     * Scheduled to run every hour at minute 0
+     * Scheduled to run every 15 minutes
      */
-    //@Scheduled(cron = "0 0 * * * *")  // Every hour at :00
-    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 */15 * * * *")  // Every 15 minutes
     public void scrapeWeatherForAllResorts() {
         List<SkiResort> resorts = skiResortRepository.findAll();
         logger.info("Starting weather scrape for {} ski resorts", resorts.size());
