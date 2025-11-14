@@ -5,7 +5,9 @@ import com.notification.service.AvalancheService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/avalanche")
@@ -19,15 +21,25 @@ public class AvalancheController {
     
     /**
      * Manually trigger avalanche data scrape
+     * POST /api/avalanche/scrape
+     * 
+     * Note: Avalanche data is automatically scraped daily at 8:00 AM
      */
     @PostMapping("/scrape")
-    public ResponseEntity<String> triggerScrape() {
+    public ResponseEntity<Map<String, String>> triggerScrape() {
         avalancheService.manualScrape();
-        return ResponseEntity.ok("Avalanche data scrape triggered");
+        
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("message", "Avalanche data scrape triggered successfully");
+        response.put("note", "Automatic scraping runs daily at 8:00 AM");
+        
+        return ResponseEntity.ok(response);
     }
     
     /**
      * Get all avalanche bulletins
+     * GET /api/avalanche
      */
     @GetMapping
     public ResponseEntity<List<AvalancheData>> getAllBulletins() {
