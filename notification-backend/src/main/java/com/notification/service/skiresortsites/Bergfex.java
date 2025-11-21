@@ -10,9 +10,9 @@ import java.util.List;
 
 public class Bergfex extends SkiResortSite
 {
-	public Bergfex(String url)
+	public Bergfex(String berfexName)
 	{
-		super(url);
+		super("https://www.bergfex.com/" + berfexName + "/schneebericht/");
 	}
 
 	@Override

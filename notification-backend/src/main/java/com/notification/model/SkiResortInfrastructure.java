@@ -29,4 +29,14 @@ public class SkiResortInfrastructure
 	{
 		_slopes.add(slope);
 	}
+
+	public ArrayList<Lift> getLifts()
+	{
+		return _lifts;
+	}
+
+	public ArrayList<Slope> getSlopes()
+	{
+		return _slopes;
+	}
 }
