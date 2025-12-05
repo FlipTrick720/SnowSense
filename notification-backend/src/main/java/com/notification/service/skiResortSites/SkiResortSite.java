@@ -1,4 +1,4 @@
-package com.notification.service.skiresortsites;
+package com.notification.service.skiResortSites;
 
 import com.microsoft.playwright.Page;
 import com.notification.model.SkiResortInfrastructure;
@@ -11,6 +11,7 @@ public class SkiResortSite
 	{
 		_url = url;
 	}
+
 	public SkiResortInfrastructure scrapeAllInfrastructureStatus(Page page)
 	{
 		page.navigate(_url);
