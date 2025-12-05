@@ -26,6 +26,14 @@
     </properties>
 
     <dependencies>
+
+        <!-- Playwright for web scraping -->
+        <dependency>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+            <version>1.55.0</version>
+        </dependency>
+
         <!-- Spring Boot Web for REST API -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
