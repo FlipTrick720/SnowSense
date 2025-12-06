@@ -50,6 +50,6 @@ curl http://localhost:8080/api/avalanche/region/AT-07-14
 
 ## Data Collection Schedule
 
-- **Weather**: Every 15 minutes (automatic)
-- **Avalanche**: Daily at 8:00 AM (automatic)
+- **Weather**: Every 5 minutes (automatic)
+- **Avalanche**: Every 5 minutes (automatic)
 
