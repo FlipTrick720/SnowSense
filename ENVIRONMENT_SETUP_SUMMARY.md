@@ -121,34 +121,11 @@ CORS_ALLOWED_ORIGINS=http://localhost:5173
 
 1. Clone the repo
 2. Copy `.env.example` to `.env` in both frontend and backend
-3. Get credentials from team lead (securely!)
+3. Get credentials from your own Firebase account.
 4. Fill in the `.env` files
 5. Run the app
 
 See [ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md) for detailed instructions.
-
-## 🧪 Testing
-
-Verify everything works:
-
-```bash
-# Frontend
-cd notification-frontend
-rm public/firebase-messaging-sw.js  # Remove generated file
-npm run dev                          # Should regenerate and work
-
-# Backend
-cd notification-backend
-mvn spring-boot:run                  # Should start without errors
-```
-
-## 📦 Before Pushing to Git
-
-Run through [GIT_PUSH_CHECKLIST.md](./GIT_PUSH_CHECKLIST.md) to ensure:
-- No secrets in git
-- .gitignore is correct
-- .env.example files are present
-- Documentation is updated
 
 ## 🎓 Best Practices Implemented
 
@@ -165,13 +142,4 @@ Run through [GIT_PUSH_CHECKLIST.md](./GIT_PUSH_CHECKLIST.md) to ensure:
 - **Never commit `.env` files** - They contain real secrets
 - **Never commit `firebase-service-account.json`** - It's like a password
 - **Always use `.env.example`** - For team members to copy
-- **Share credentials securely** - Use password managers, not email/Slack
-- **Rotate keys if exposed** - Better safe than sorry
-
-## 📚 Additional Resources
-
-- [12-Factor App Methodology](https://12factor.net/config)
-- [Firebase Security Best Practices](https://firebase.google.com/docs/rules/security)
-- [Environment Variables in Vite](https://vitejs.dev/guide/env-and-mode.html)
-- [Spring Boot External Configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config)
 
