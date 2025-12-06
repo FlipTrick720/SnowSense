@@ -131,3 +131,159 @@ INSERT INTO ski_resort (name, bergfex_name, latitude, longitude, elevation) VALU
 ('Kolsassberg', 'kolsassberg', 47.2881, 11.6183, 1456),
 ('Pillersee', 'pillersee-hochfilzen', 47.5133, 12.5611, 1663),
 ('Steinplatte', 'waidring-steinplatte', 47.5156, 12.5619, 1869);
+
+
+-- ========== AVALANCHE REGION MAPPINGS ==========
+-- Maps ski resorts to their corresponding avalanche warning regions
+-- Based on geographic location and EUREGIO avalanche region codes
+-- Region codes format: AT-07-XX (Austria, Tyrol, Region)
+
+-- STUBAI ALPS (AT-07-14)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Stubai Glacier'), 'AT-07-14-01', 'Stubai Alps - Main Ridge', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Schlick 2000'), 'AT-07-14-02', 'Stubai Alps - Sellrain', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Serles'), 'AT-07-14-03', 'Stubai Alps - South', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Axamer Lizum'), 'AT-07-14-04', 'Stubai Alps - North', TRUE);
+
+-- ÖTZTAL ALPS (AT-07-16)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Sölden'), 'AT-07-16', 'Ötztal Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Obergurgl-Hochgurgl'), 'AT-07-16', 'Ötztal Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Vent'), 'AT-07-16', 'Ötztal Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Hochoetz'), 'AT-07-16', 'Ötztal Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Niederthai'), 'AT-07-16', 'Ötztal Alps', TRUE);
+
+-- SILVRETTA / PAZNAUN (AT-07-17)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Ischgl-Samnaun'), 'AT-07-17-01', 'Silvretta - Paznaun', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Galtür'), 'AT-07-17-01', 'Silvretta - Paznaun', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Kappl'), 'AT-07-17-02', 'Silvretta - Kappl', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'See'), 'AT-07-17-02', 'Silvretta - Kappl', TRUE);
+
+-- ARLBERG (AT-07-02)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'St. Anton am Arlberg'), 'AT-07-02-01', 'Arlberg - St. Anton', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Lech-Zürs'), 'AT-07-02-02', 'Arlberg - Lech', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'St. Christoph'), 'AT-07-02-01', 'Arlberg - St. Anton', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Stuben'), 'AT-07-02-01', 'Arlberg - St. Anton', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Warth-Schröcken'), 'AT-07-01', 'Allgäu Alps', TRUE);
+
+-- PITZTAL (AT-07-20, AT-07-21)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Pitztal Glacier'), 'AT-07-20', 'Weißkugel Range', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Rifflsee'), 'AT-07-20', 'Weißkugel Range', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Hochzeiger'), 'AT-07-21', 'Gurgler Range', TRUE);
+
+-- KAUNERTAL (AT-07-19)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Kaunertal Glacier'), 'AT-07-19', 'Glockner Range', TRUE);
+
+-- SERFAUS-FISS-LADIS (AT-07-15, AT-07-16)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Serfaus-Fiss-Ladis'), 'AT-07-15', 'Sellrain-Kühtai', TRUE);
+
+-- NAUDERS & VENET (AT-07-18, AT-07-17)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Nauders'), 'AT-07-18', 'Samnaun Mountains', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Fendels'), 'AT-07-17-02', 'Silvretta', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Venet'), 'AT-07-17-02', 'Silvretta', TRUE);
+
+-- INNSBRUCK REGION (AT-07-04, AT-07-05, AT-07-06)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Nordkette'), 'AT-07-04-01', 'Karwendel Mountains', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Patscherkofel'), 'AT-07-05', 'Brandenberg Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Glungezer'), 'AT-07-06', 'Rofan Mountains', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Muttereralm'), 'AT-07-04-02', 'Karwendel - South', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Rangger Köpfl'), 'AT-07-03', 'Mieming Mountains', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Bergeralm'), 'AT-07-06', 'Rofan Mountains', TRUE);
+
+-- KÜHTAI (AT-07-15)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Kühtai'), 'AT-07-15', 'Sellrain-Kühtai', TRUE);
+
+-- ZILLERTAL (AT-07-10, AT-07-11, AT-07-23)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Hintertux Glacier'), 'AT-07-11', 'Eastern Tux Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Zillertal 3000'), 'AT-07-11', 'Eastern Tux Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Mayrhofen-Hippach'), 'AT-07-10', 'Western Tux Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Hochfügen-Hochzillertal'), 'AT-07-10', 'Western Tux Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Kaltenbach-Hochzillertal'), 'AT-07-10', 'Western Tux Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Zillertal Arena'), 'AT-07-23', 'Northern Zillertal Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Gerlos'), 'AT-07-23', 'Northern Zillertal Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Spieljoch-Fügen'), 'AT-07-10', 'Western Tux Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Ski Optimal Hochfügen'), 'AT-07-10', 'Western Tux Alps', TRUE);
+
+-- ALPBACHTAL & WILDSCHÖNAU (AT-07-07)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Ski Juwel Alpbachtal-Wildschönau'), 'AT-07-07', 'Western Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Alpbach'), 'AT-07-07', 'Western Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Wildschönau'), 'AT-07-07', 'Western Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Reith im Alpbachtal'), 'AT-07-07', 'Western Kitzbühel Alps', TRUE);
+
+-- KITZBÜHEL REGION (AT-07-08, AT-07-09)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'KitzSki Kitzbühel-Kirchberg'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'St. Johann in Tirol'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Fieberbrunn'), 'AT-07-09', 'Eastern Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Kirchberg in Tirol'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Pass Thurn'), 'AT-07-09', 'Eastern Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Pillersee'), 'AT-07-09', 'Eastern Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Steinplatte'), 'AT-07-09', 'Eastern Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Hochkössen'), 'AT-07-09', 'Eastern Kitzbühel Alps', TRUE);
+
+-- SKIWELT WILDER KAISER (AT-07-08)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'SkiWelt Wilder Kaiser-Brixental'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Söll'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Ellmau'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Going'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Scheffau'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Westendorf'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Brixen im Thale'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Hopfgarten'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Itter'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Hohe Salve'), 'AT-07-08', 'Central Kitzbühel Alps', TRUE);
+
+-- ACHENSEE REGION (AT-07-06)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Achensee - Christlum'), 'AT-07-06', 'Rofan Mountains', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Achensee - Pertisau'), 'AT-07-06', 'Rofan Mountains', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Rofan'), 'AT-07-06', 'Rofan Mountains', TRUE);
+
+-- WIPPTAL (AT-07-14)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Steinach am Brenner'), 'AT-07-14-05', 'Stubai Alps - Wipptal', TRUE);
+
+-- EAST TYROL (AT-07-26, AT-07-27, AT-07-28, AT-07-29)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Großglockner Resort Kals-Matrei'), 'AT-07-26', 'Glockner Range', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Lienz - Hochstein'), 'AT-07-27', 'Eastern Deferegger Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Lienz - Zettersfeld'), 'AT-07-27', 'Eastern Deferegger Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'St. Jakob in Defereggen'), 'AT-07-27', 'Eastern Deferegger Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Sillian-Hochpustertal'), 'AT-07-29', 'Lienzer Dolomites', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Obertilliach'), 'AT-07-28', 'Schober Mountains', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Kartitsch'), 'AT-07-29', 'Lienzer Dolomites', TRUE);
+
+-- TIROLER OBERLAND (AT-07-03, AT-07-02)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Imst-Hoch-Imst'), 'AT-07-03', 'Mieming Mountains', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Hahnenkamm Reutte'), 'AT-07-01', 'Allgäu Alps', TRUE);
+
+-- ZUGSPITZ ARENA (AT-07-03, AT-07-04)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Ehrwald - Zugspitze'), 'AT-07-03', 'Mieming Mountains', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Lermoos'), 'AT-07-03', 'Mieming Mountains', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Berwang'), 'AT-07-01', 'Allgäu Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Bichlbach'), 'AT-07-01', 'Allgäu Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Biberwier'), 'AT-07-03', 'Mieming Mountains', TRUE);
+
+-- SEEFELD REGION (AT-07-04)
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Rosshütte Seefeld'), 'AT-07-04-01', 'Karwendel Mountains', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Gschwandtkopf'), 'AT-07-04-01', 'Karwendel Mountains', TRUE);
+
+-- KLEINERE SKIGEBIETE
+INSERT INTO ski_resort_avalanche_region (ski_resort_id, region_code, region_name, is_primary) VALUES
+((SELECT id FROM ski_resort WHERE name = 'Thiersee'), 'AT-07-05', 'Brandenberg Alps', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Weerberg'), 'AT-07-06', 'Rofan Mountains', TRUE),
+((SELECT id FROM ski_resort WHERE name = 'Kolsassberg'), 'AT-07-06', 'Rofan Mountains', TRUE);
