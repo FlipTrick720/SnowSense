@@ -20,6 +20,9 @@ public class SkiResort {
     
     @Column(nullable = false)
     private String name;
+
+	@Column(nullable = false, name = "bergfex_name")
+	private String bergfexName;
     
     @Column(nullable = false)
     private Double latitude;

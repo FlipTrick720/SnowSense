@@ -2,10 +2,36 @@
 CREATE TABLE IF NOT EXISTS ski_resort (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
+    bergfex_name VARCHAR(255) NOT NULL,
     latitude DECIMAL(10, 7) NOT NULL,
     longitude DECIMAL(10, 7) NOT NULL,
     elevation INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Ski Resort Lift Table
+CREATE TABLE IF NOT EXISTS ski_resort_lift (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    ski_resort_id BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(100),
+    length_in_meters INT,
+    is_open BOOLEAN DEFAULT FALSE,
+    last_status_change TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ski_resort_id) REFERENCES ski_resort(id)
+);
+
+-- Ski Resort Slope Table
+CREATE TABLE IF NOT EXISTS ski_resort_slope (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    ski_resort_id BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    difficulty_level VARCHAR(50),
+    is_open BOOLEAN DEFAULT FALSE,
+    last_status_change TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ski_resort_id) REFERENCES ski_resort(id)
 );
 
 -- Weather Data Table
