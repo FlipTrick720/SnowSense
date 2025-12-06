@@ -145,7 +145,7 @@ When a new team member clones the repo:
    cp notification-backend/.env.example notification-backend/.env
    ```
 
-2. **Get credentials from team lead** (via secure channel, NOT email/Slack)
+2. **Get credentials from own Firebase account**
 
 3. **Fill in the `.env` files** with real values
 
@@ -175,72 +175,3 @@ Add environment variables in your hosting platform's dashboard:
 1. Site Settings → Build & Deploy → Environment
 2. Add each `VITE_*` variable
 3. Trigger new deploy
-
-### Backend (Heroku, AWS, etc.)
-
-**Heroku:**
-```bash
-heroku config:set FIREBASE_SERVICE_ACCOUNT_PATH=/app/firebase-key.json
-heroku config:set SERVER_PORT=8080
-heroku config:set CORS_ALLOWED_ORIGINS=https://your-frontend.com
-```
-
-**AWS/Docker:**
-- Use AWS Secrets Manager or Parameter Store
-- Mount secrets as environment variables
-- Never hardcode in Dockerfile
-
-## Troubleshooting
-
-### "Cannot find module" or "undefined" errors
-
-**Frontend:**
-- Make sure `.env` file exists in `notification-frontend/`
-- Restart dev server after changing `.env`
-- Check variable names start with `VITE_`
-
-**Backend:**
-- Make sure `.env` file exists in `notification-backend/`
-- Check `spring-dotenv` dependency is in `pom.xml`
-- Restart Spring Boot application
-
-### Service worker not working
-
-```bash
-cd notification-frontend
-npm run generate-sw
-```
-
-This regenerates the service worker with current env vars.
-
-### Firebase initialization fails
-
-**Frontend:**
-- Check all `VITE_FIREBASE_*` variables are set
-- Verify values match Firebase Console
-
-**Backend:**
-- Check `FIREBASE_SERVICE_ACCOUNT_PATH` points to valid JSON file
-- Verify file permissions (readable)
-- Check file path is absolute, not relative
-
-## Security Best Practices
-
-1. ✅ **Never commit `.env` files**
-2. ✅ **Never commit `firebase-service-account.json`**
-3. ✅ **Use different Firebase projects for dev/staging/prod**
-4. ✅ **Rotate keys if accidentally exposed**
-5. ✅ **Share credentials via secure channels only** (1Password, LastPass, etc.)
-6. ✅ **Restrict API keys in Firebase Console** (optional but recommended)
-7. ✅ **Use environment-specific `.env` files** (`.env.development`, `.env.production`)
-
-## Need Help?
-
-- Check `.env.example` files for required variables
-- Verify Firebase Console settings match your config
-- Make sure all placeholders are replaced with real values
-- Restart servers after changing environment variables
-
----
-
-**Remember:** The `.env` files contain sensitive credentials. Treat them like passwords!
