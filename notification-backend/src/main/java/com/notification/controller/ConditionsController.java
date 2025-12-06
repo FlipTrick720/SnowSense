@@ -52,8 +52,6 @@ public class ConditionsController {
      * Trigger scraping of both weather and avalanche data
      * POST /api/conditions/scrape
      * 
-     * Note: Avalanche data is only updated at 8 AM
-     * Weather data is updated every 15 minutes
      */
     @PostMapping("/scrape")
     public ResponseEntity<Map<String, String>> triggerScrape() {
