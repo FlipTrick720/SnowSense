@@ -84,3 +84,19 @@ CREATE TABLE IF NOT EXISTS avalanche_data (
 CREATE INDEX idx_avalanche_bulletin ON avalanche_data(bulletin_id);
 CREATE INDEX idx_avalanche_valid_time ON avalanche_data(valid_time_start, valid_time_end);
 CREATE INDEX idx_avalanche_danger ON avalanche_data(danger_level);
+
+-- Avalanche Region Mapping Table
+-- Maps avalanche warning regions to ski resorts
+CREATE TABLE IF NOT EXISTS ski_resort_avalanche_region (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    ski_resort_id BIGINT NOT NULL,
+    region_code VARCHAR(50) NOT NULL,
+    region_name VARCHAR(255),
+    is_primary BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ski_resort_id) REFERENCES ski_resort(id),
+    CONSTRAINT unique_resort_region UNIQUE (ski_resort_id, region_code)
+);
+
+CREATE INDEX idx_resort_region_code ON ski_resort_avalanche_region(region_code);
+CREATE INDEX idx_resort_region_resort ON ski_resort_avalanche_region(ski_resort_id);
