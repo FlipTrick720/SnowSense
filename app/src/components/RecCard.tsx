@@ -1,17 +1,26 @@
 import React from "react";
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle} from "@ionic/react";
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from "@ionic/react";
 
+interface RecCardProps {
+    resortName: string;
+    liftStatus: string;
+}
 
-const RecCard: React.FC =()=>{
+const RecCard: React.FC<RecCardProps> = ({ resortName, liftStatus }) => {
     return (
-        <IonCard color="tertiary" style={{minHeight: "120px"}}>
+        <IonCard color="tertiary" style={{ minHeight: "120px" }}>
             <IonCardHeader>
-                <IonCardSubtitle style={{ fontWeight: '400', lineHeight:'8px'}}>Recommendation</IonCardSubtitle>
-                <IonCardTitle style={{ fontWeight: '600', fontSize: '20px'  }}>Mayrhofen</IonCardTitle>
+                <IonCardSubtitle style={{ fontWeight: '400', lineHeight: '14px' }}>
+                    Nearest Resort
+                </IonCardSubtitle>
+                <IonCardTitle style={{ fontWeight: '600', fontSize: '20px' }}>
+                    {resortName}
+                </IonCardTitle>
             </IonCardHeader>
 
-            <IonCardContent style={{lineHeight:"10px"}}>20 Lifts Open</IonCardContent>
-
+            <IonCardContent style={{ lineHeight: "14px", fontSize: '13px' }}>
+                {liftStatus}
+            </IonCardContent>
         </IonCard>
     )
 }
