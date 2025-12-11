@@ -12,3 +12,38 @@ firebase-service-account.json
 
 # Service worker (generated from template)
 notification-frontend/public/firebase-messaging-sw.js
+
+
+#--------------for app---------------
+# dependencies
+/app/node_modules
+/app/.pnp
+/app/.pnp.js
+
+# testing
+/app/coverage
+
+# production
+/app/dist
+
+# misc
+/app/.DS_Store
+/app/.env.local
+/app/.env.development.local
+/app/.env.test.local
+/app/.env.production.local
+/app/.nx
+/app/.nx/cache
+/app/.vscode/*
+!/app/.vscode/extensions.json
+/app/.idea
+
+/app/npm-debug.log*
+/app/yarn-debug.log*
+/app/yarn-error.log*
+
+# Optional eslint cache
+/app/.eslintcache
+
+#firebasesdk
+notification-backend/snowsense-a06fc-firebase-adminsdk-fbsvc-296c1634a9.json

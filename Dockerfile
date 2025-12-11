@@ -1,7 +1,7 @@
 # Multi-stage build for Spring Boot + React app
 FROM node:20-alpine AS frontend-build
 
-# Accept build arguments for frontend env vars
+# Accept build arguments for notification-frontend env vars
 ARG VITE_FIREBASE_API_KEY
 ARG VITE_FIREBASE_AUTH_DOMAIN
 ARG VITE_FIREBASE_PROJECT_ID
