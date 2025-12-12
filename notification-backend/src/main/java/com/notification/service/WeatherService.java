@@ -63,6 +63,13 @@ public class WeatherService {
         OpenMeteoResponse response = restTemplate.getForObject(url, OpenMeteoResponse.class);
         
         if (response != null && response.getCurrent() != null) {
+            // Delete old weather data for this resort to keep only the latest
+            List<WeatherData> oldData = weatherDataRepository.findBySkiResortIdOrderByTimestampDesc(resort.getId());
+            if (!oldData.isEmpty()) {
+                weatherDataRepository.deleteAll(oldData);
+                logger.info("Deleted {} old weather entries for {}", oldData.size(), resort.getName());
+            }
+            
             WeatherData weatherData = mapToWeatherData(resort, response);
             weatherDataRepository.save(weatherData);
             
@@ -122,21 +129,7 @@ public class WeatherService {
      * Print weather data to terminal
      */
     private void printWeatherData(SkiResort resort, WeatherData data) {
-        logger.info("========================================");
         logger.info("Weather Data for: {}", resort.getName());
-        logger.info("========================================");
-        logger.info("Timestamp: {}", data.getTimestamp());
-        logger.info("Temperature: {}°C", data.getTemperature());
-        logger.info("Wind Speed: {} km/h", data.getWindSpeed());
-        logger.info("Wind Direction: {}°", data.getWindDirection());
-        logger.info("Precipitation: {} mm", data.getPrecipitation());
-        logger.info("Snowfall: {} cm", data.getSnowfall());
-        logger.info("Snow Depth: {} cm", data.getSnowDepth());
-        logger.info("Cloud Cover: {}%", data.getCloudCover());
-        logger.info("Visibility: {} m", data.getVisibility());
-        logger.info("Freezing Level: {} m", data.getFreezingLevel());
-        logger.info("Weather Code: {}", data.getWeatherCode());
-        logger.info("========================================\n");
     }
     
     /**
