@@ -16,7 +16,7 @@
 | GET | `/api/avalanche/current` | Get currently valid bulletins | - |
 | GET | `/api/avalanche/region/{code}` | Get bulletins by region code | - |
 | GET | `/api/avalanche/high-danger` | Get high danger bulletins | - |
-| POST | `/api/avalanche/scrape` | Trigger avalanche scrape | Auto: Daily 8 AM |
+| POST | `/api/avalanche/scrape` | Trigger avalanche scrape | Auto: Every 5 min |
 
 ## 🎿 Ski Resort + Avalanche Combined API
 
@@ -26,6 +26,14 @@
 | GET | `/api/resorts/{id}/with-avalanche` | Single resort with avalanche data | Resort detail page |
 | GET | `/api/resorts/safe` | Only safe resorts (low/moderate) | Filter safe options |
 | GET | `/api/resorts/high-danger` | Resorts with high danger warnings | Safety alerts |
+
+## 🌡️ Conditions API (Not Implemented)
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/conditions` | Get combined weather and avalanche conditions for all resorts |
+| GET | `/api/conditions/{resortId}` | Get combined weather and avalanche conditions for a specific resort |
+| POST | `/api/conditions/scrape` | Trigger scraping of both weather and avalanche data |
 
 ## 🚡 Ski Resort Infrastructure API
 
@@ -46,7 +54,7 @@
 | POST | `/api/notifications/subscribe` | Subscribe device token |
 | POST | `/api/notifications/unsubscribe` | Unsubscribe device token |
 
-## Recommendaction API
+## Recommendation API
 
 | Method | Endpoint | Description | Default |
 |--------|----------|-------------|---------|
