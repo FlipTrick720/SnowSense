@@ -46,6 +46,15 @@
 | POST | `/api/notifications/subscribe` | Subscribe device token |
 | POST | `/api/notifications/unsubscribe` | Unsubscribe device token |
 
+## Recommendaction API
+
+| Method | Endpoint | Description | Default |
+|--------|----------|-------------|---------|
+| GET | `/api/recommendation/skiresort` | Get best resort by temperature | Target: -4°C |
+
+**Returns:** Resort with temperature closest to `targetTemp` (default: -4)
+Example for -2 C°: `GET http://localhost:8080/api/recommendation/skiresort?targetTemp=-2`
+
 ## 🏥 Health Check
 
 | Method | Endpoint | Description |
