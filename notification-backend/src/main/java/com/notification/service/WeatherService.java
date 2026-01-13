@@ -7,6 +7,8 @@ import com.notification.repository.SkiResortRepository;
 import com.notification.repository.WeatherDataRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -33,10 +35,19 @@ public class WeatherService {
     }
     
     /**
-     * Scrape weather data for all ski resorts
-     * Scheduled to run every 5 minutes
+     * Scrape weather data for all ski resorts on application startup
      */
-    @Scheduled(cron = "0 */5 * * * *")  // Every 5 minutes
+    @EventListener(ApplicationReadyEvent.class)
+    public void scrapeWeatherOnStartup() {
+        logger.info("Application started - triggering initial weather scrape");
+        scrapeWeatherForAllResorts();
+    }
+    
+    /**
+     * Scrape weather data for all ski resorts
+     * Scheduled to run every 30 minutes (runs on startup via @EventListener)
+     */
+    @Scheduled(cron = "0 */30 * * * *")  // Every 30 minutes
     public void scrapeWeatherForAllResorts() {
         List<SkiResort> resorts = skiResortRepository.findAll();
         logger.info("Starting weather scrape for {} ski resorts", resorts.size());
