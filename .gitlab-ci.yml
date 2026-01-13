@@ -8,4 +8,4 @@ fitness-functions:
   image: eclipse-temurin:17-jdk
   script:
     - cd notification-backend
-    - ./mvn test -Dtest=ServiceCouplingFitnessFunctionTest --no-transfer-progress
+    - mvn test -Dtest=ServiceCouplingFitnessFunctionTest --no-transfer-progress
