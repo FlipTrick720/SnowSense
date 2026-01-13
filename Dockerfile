@@ -1,7 +1,7 @@
-# Multi-stage build for Spring Boot + React app
+# Multi-stage build for Spring Boot + React/Ionic app
 FROM node:20-alpine AS frontend-build
 
-# Accept build arguments for notification-frontend env vars
+# Accept build arguments for app env vars
 ARG VITE_FIREBASE_API_KEY
 ARG VITE_FIREBASE_AUTH_DOMAIN
 ARG VITE_FIREBASE_PROJECT_ID
@@ -22,9 +22,9 @@ ENV VITE_FIREBASE_VAPID_KEY=$VITE_FIREBASE_VAPID_KEY
 ENV VITE_API_URL=$VITE_API_URL
 
 WORKDIR /app/frontend
-COPY notification-frontend/package*.json ./
+COPY app/package*.json ./
 RUN npm ci
-COPY notification-frontend/ ./
+COPY app/ ./
 RUN npm run build
 
 # Backend build stage
