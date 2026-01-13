@@ -5,7 +5,7 @@ stages:
 
 fitness-functions:
   stage: test
-  image: eclipse-temurin:17-jdk
+  image: maven:3.9-eclipse-temurin-17
   script:
     - cd notification-backend
     - mvn test -Dtest=ServiceCouplingFitnessFunctionTest --no-transfer-progress
