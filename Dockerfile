@@ -59,7 +59,7 @@ RUN apt-get update && apt-get install -y \
     libgbm1 \
     libxcb1 \
     libxkbcommon0 \
-    libasound2 \
+    libasound2t64 \
     libcairo2 \
     libpango-1.0-0 \
     && rm -rf /var/lib/apt/lists/*
