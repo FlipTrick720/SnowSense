@@ -1,250 +1,299 @@
-# Notification System with Push Notifications (AI Generated)
+# SnowSense - Ski Resort Notification & Recommendation System
 
-A full-stack notification system with Firebase Cloud Messaging (FCM) push notifications. Built with React (frontend) and Spring Boot (backend)...
+A full-stack ski resort information system with weather data, avalanche warnings, and intelligent recommendations. Built with Ionic/React (frontend) and Spring Boot (backend).
 
 ## Features
 
-- ✅ Create and view notifications
-- ✅ Real-time push notifications (even when browser is closed!)
-- ✅ Firebase Cloud Messaging integration
-- ✅ Service worker for background notifications
-- ✅ Responsive UI with modern design
-- ✅ Environment variable configuration
-- ✅ In-memory storage (easily upgradeable to database)
+- ✅ Real-time ski resort data (lifts, slopes, weather)
+- ✅ Avalanche warnings and safety information
+- ✅ Intelligent resort recommendations based on location
+- ✅ Web scraping for live resort status
+- ✅ Responsive mobile-first UI with Ionic
+- ✅ RESTful API backend
+- ✅ Automated data updates
 
 ## Tech Stack
 
 **Frontend:**
+- Ionic 8.5
 - React 19
+- TypeScript
 - Vite
-- Firebase SDK 10.14.1
-- Axios
-- Service Workers
+- Capacitor (for mobile)
 
 **Backend:**
 - Java 17
-- Spring Boot 3.2.0
-- Firebase Admin SDK
+- Spring Boot 3.2.1
+- Spring Data JPA
+- H2 Database
+- Playwright (web scraping)
 - Maven
 
-## Quick Start
+## 🚀 Quick Start Commands
 
-### Prerequisites
-
-- Node.js 18+ and npm
-- Java 17+
-- Maven
-- Firebase project with Cloud Messaging enabled
-
-### 1. Clone and Setup
-
-```bash
-git clone <your-repo-url>
-cd proof-of-concept-website-with-notification
-```
-
-### 2. Configure Environment Variables
-
-**Frontend:**
-```bash
-cd notification-frontend
-cp .env.example .env
-# Edit .env with your Firebase credentials
-```
-
-**Backend:**
-```bash
-cd notification-backend
-cp .env.example .env
-# Edit .env with your Firebase service account path
-```
-
-See [ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md) for detailed instructions.
-
-### 3. Install Dependencies
-
-**Frontend:**
-```bash
-cd notification-frontend
-npm install
-```
-
-**Backend:**
-```bash
-cd notification-backend
-mvn clean install
-```
-
-### 4. Run the Application
-
-**Terminal 1 - Backend:**
+### Backend
 ```bash
 cd notification-backend
 mvn spring-boot:run
 ```
+Backend runs on: http://localhost:8080
 
-**Terminal 2 - Frontend:**
+### Frontend
 ```bash
-cd notification-frontend
+cd app
+npm install
+npm run dev
+```
+Frontend runs on: http://localhost:5173
+
+### Run Tests
+```bash
+# Backend tests (includes fitness function)
+cd notification-backend
+mvn test
+
+# Frontend tests
+cd app
+npm test
+```
+
+## Prerequisites
+
+- Node.js 18+ and npm
+- Java 17+
+- Maven 3.6+
+
+## Detailed Setup
+
+### 1. Clone Repository
+
+```bash
+git clone <your-repo-url>
+cd snowsense
+```
+
+### 2. Backend Setup
+
+```bash
+cd notification-backend
+mvn clean install
+mvn spring-boot:run
+```
+
+The backend will:
+- Start on port 8080
+- Initialize H2 database
+- Begin scraping ski resort data
+- Fetch weather and avalanche information
+
+### 3. Frontend Setup
+
+```bash
+cd app
+npm install
 npm run dev
 ```
 
-Open http://localhost:5173 in your browser.
-
-### 5. Enable Push Notifications
-
-1. Click the "Enable" button on the push notification toggle
-2. Grant browser permission when prompted
-3. Create a notification using the form
-4. You'll receive a push notification! 🎉
+The frontend will:
+- Start on port 5173
+- Connect to backend API
+- Enable geolocation for recommendations
 
 ## Project Structure
 
 ```
 .
-├── notification-frontend/          # React frontend
+├── app/                           # Ionic/React frontend
 │   ├── src/
-│   │   ├── components/            # React components
-│   │   ├── services/              # API and push notification services
-│   │   └── config/                # Firebase configuration
-│   ├── public/                    # Static assets
-│   └── .env.example               # Environment variables template
+│   │   ├── components/           # React components
+│   │   ├── pages/                # Page components
+│   │   ├── context/              # React context (data management)
+│   │   └── theme/                # Ionic theming
+│   └── package.json
 │
-├── notification-backend/           # Spring Boot backend
+├── notification-backend/          # Spring Boot backend
 │   ├── src/main/java/com/notification/
-│   │   ├── controller/            # REST controllers
-│   │   ├── service/               # Business logic
-│   │   ├── repository/            # Data access
-│   │   ├── model/                 # Domain models
-│   │   └── config/                # Configuration
-│   └── .env.example               # Environment variables template
+│   │   ├── controller/           # REST controllers
+│   │   ├── service/              # Business logic
+│   │   ├── repository/           # Data access
+│   │   ├── model/                # Domain models
+│   │   └── dto/                  # Data transfer objects
+│   ├── src/test/java/
+│   │   └── fitness/              # Architecture fitness functions
+│   └── pom.xml
 │
-├── ENV_SETUP_GUIDE.md             # Environment setup instructions
-├── FIREBASE_SETUP_GUIDE.md        # Firebase configuration guide
-└── PUSH_NOTIFICATIONS_README.md   # Push notifications documentation
+├── Dockerfile                     # Multi-stage Docker build
+├── render.yaml                    # Render deployment config
+└── README.md
 ```
 
 ## API Endpoints
 
-### Notifications
+### Ski Resorts
+- `GET /api/skiresort` - Get all ski resorts
+- `GET /api/skiresort/{id}` - Get resort by ID
+- `GET /api/skiresort/lifts` - Get all lift statuses
+- `GET /api/skiresort/slopes` - Get all slope statuses
+- `GET /api/skiresort/scrape` - Trigger data scraping
 
-- `POST /api/notifications` - Create a notification
-- `GET /api/notifications` - Get all notifications
+### Weather
+- `GET /api/weather` - Get all weather data
+- `GET /api/weather/resort/{id}` - Get weather for specific resort
 
-### Push Subscriptions
+### Avalanche
+- `GET /api/avalanche` - Get all avalanche warnings
+- `GET /api/avalanche/current` - Get current valid warnings
 
-- `POST /api/notifications/subscribe` - Subscribe to push notifications
-- `POST /api/notifications/unsubscribe` - Unsubscribe from push notifications
+### Recommendations
+- `POST /api/recommendation/skiresort` - Get personalized recommendations
+  ```json
+  {
+    "latitude": 47.2692,
+    "longitude": 11.4041
+  }
+  ```
 
-## Documentation
-
-- **[ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md)** - Environment variables setup
-- **[FIREBASE_SETUP_GUIDE.md](./FIREBASE_SETUP_GUIDE.md)** - Firebase configuration
-- **[PUSH_NOTIFICATIONS_README.md](./PUSH_NOTIFICATIONS_README.md)** - Push notifications overview
-- **[SETUP_CHECKLIST.md](./SETUP_CHECKLIST.md)** - Quick setup checklist
+### Combined Data
+- `GET /api/resorts/with-avalanche` - Get resorts with avalanche data
+- `GET /api/resorts/{id}/with-avalanche` - Get specific resort with avalanche data
 
 ## Development
-
-### Frontend Development
-
-```bash
-cd notification-frontend
-npm run dev          # Start dev server
-npm run build        # Build for production
-npm run test         # Run tests
-npm run lint         # Lint code
-```
 
 ### Backend Development
 
 ```bash
 cd notification-backend
-mvn spring-boot:run  # Start server
-mvn test             # Run tests
-mvn clean package    # Build JAR
+
+# Run application
+mvn spring-boot:run
+
+# Run tests
+mvn test
+
+# Run fitness functions
+mvn test -Dtest=ServiceCouplingFitnessFunctionTest
+
+# Build JAR
+mvn clean package
+
+# Clean build
+mvn clean install
 ```
 
-## Testing Push Notifications
+### Frontend Development
 
-### Test Foreground Notifications
-1. Keep the app open
-2. Create a notification
-3. Should see notification popup
+```bash
+cd app
 
-### Test Background Notifications
-1. Enable push notifications
-2. Minimize or close the browser tab
-3. Create a notification from another device/browser
-4. Should receive OS notification
+# Development server
+npm run dev
 
-## Browser Support
+# Build for production
+npm run build
 
-- ✅ Chrome/Edge (Desktop & Android)
-- ✅ Firefox (Desktop & Android)
-- ✅ Safari 16.4+ (macOS & iOS)
-- ✅ Opera
-- ❌ Internet Explorer
+# Run tests
+npm test
 
-## Security
+# Lint code
+npm run lint
 
-- Environment variables for sensitive credentials
-- Firebase service account key not committed to git
-- CORS configuration for API security
-- HTTPS required in production for push notifications
+# Preview production build
+npm run preview
+```
+
+## Architecture Fitness Functions
+
+This project implements fitness functions to maintain architectural quality:
+
+**Service Layer Coupling Fitness Function**
+- Ensures services don't exceed 3 dependencies
+- Protects modifiability characteristic
+- Runs automatically with `mvn test`
+
+See `notification-backend/FITNESS_FUNCTION_README.md` for details.
 
 ## Deployment
 
-### Frontend (Vercel/Netlify)
+### Production (Render)
 
-1. Connect your git repository
-2. Add environment variables in dashboard
-3. Deploy!
+The application is deployed at: **https://snowsense.onrender.com**
 
-### Backend (Heroku/AWS)
+Deployment is automatic from the `frontend` branch:
+1. Push to `frontend` branch
+2. Render builds Docker image
+3. Deploys to production
 
-1. Set environment variables
-2. Upload Firebase service account key securely
-3. Deploy JAR file
+### Docker Build
 
-See [ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md) for detailed deployment instructions.
+```bash
+# Build image
+docker build -t snowsense .
+
+# Run container
+docker run -p 8080:8080 snowsense
+```
+
+## Environment Variables
+
+### Frontend (Build-time)
+- `VITE_API_URL` - Backend API URL (defaults to production)
+
+### Backend (Runtime)
+- `SERVER_PORT` - Server port (default: 8080)
+- `CORS_ALLOWED_ORIGINS` - Allowed CORS origins
+
+## Data Sources
+
+- **Weather**: OpenMeteo API
+- **Avalanche**: Austrian Avalanche Warning Service (CAAML format)
+- **Ski Resorts**: Bergfex.at (web scraping)
+
+## Automated Tasks
+
+- Weather data: Updates every 5 minutes
+- Avalanche warnings: Updates daily at 8 AM
+- Ski resort status: Updates hourly
+
+## Browser Support
+
+- ✅ Chrome/Edge (Desktop & Mobile)
+- ✅ Firefox (Desktop & Mobile)
+- ✅ Safari (Desktop & Mobile)
+- ✅ Mobile apps via Capacitor
 
 ## Troubleshooting
 
-### Push notifications not working?
-- Check [TROUBLESHOOTING_STUCK_TOKEN.md](./TROUBLESHOOTING_STUCK_TOKEN.md)
-- Verify Firebase Cloud Messaging is enabled
-- Check browser console for errors
-- Try in incognito mode
-
 ### Backend won't start?
-- Check `.env` file exists and has correct values
-- Verify Firebase service account path is correct
-- Check Java version (requires 17+)
+- Check Java version: `java -version` (requires 17+)
+- Check Maven: `mvn -version`
+- Clean and rebuild: `mvn clean install`
 
-### Frontend build fails?
-- Check `.env` file exists
-- Run `npm run generate-sw` manually
-- Clear node_modules and reinstall
+### Frontend won't start?
+- Check Node version: `node -version` (requires 18+)
+- Clear node_modules: `rm -rf node_modules && npm install`
+- Check port 5173 is available
+
+### CORS errors?
+- Backend must be running on port 8080
+- Frontend uses `VITE_API_URL` or defaults to production
+
+### Playwright errors?
+- System dependencies are installed via Dockerfile
+- For local development, Playwright installs automatically
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test thoroughly
+4. Run tests: `mvn test` and `npm test`
 5. Submit a pull request
 
 ## License
 
-MIT License - feel free to use this project for learning or production!
-
-## Acknowledgments
-
-- Firebase for Cloud Messaging
-- Spring Boot team
-- React team
-- Vite team
+MIT License
 
 ---
 
-**Need help?** Check the documentation files or open an issue!
+**Live Demo**: https://snowsense.onrender.com
+**Need help?** Open an issue on the repository!
