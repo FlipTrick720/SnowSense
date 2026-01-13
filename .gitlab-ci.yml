@@ -9,7 +9,3 @@ fitness-functions:
   script:
     - cd notification-backend
     - ./mvnw test -Dtest=ServiceCouplingFitnessFunctionTest --no-transfer-progress
-  only:
-    - dev
-    - main
-    - /^feature\/.*$/  # optional: run on feature branches too
