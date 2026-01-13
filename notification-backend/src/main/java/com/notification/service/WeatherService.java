@@ -74,15 +74,17 @@ public class WeatherService {
         OpenMeteoResponse response = restTemplate.getForObject(url, OpenMeteoResponse.class);
         
         if (response != null && response.getCurrent() != null) {
-            // Delete old weather data for this resort to keep only the latest
-            List<WeatherData> oldData = weatherDataRepository.findBySkiResortIdOrderByTimestampDesc(resort.getId());
-            if (!oldData.isEmpty()) {
+            WeatherData weatherData = mapToWeatherData(resort, response);
+            weatherDataRepository.save(weatherData);
+            
+            // Keep only the latest weather record for this resort (delete older ones)
+            List<WeatherData> allData = weatherDataRepository.findBySkiResortIdOrderByTimestampDesc(resort.getId());
+            if (allData.size() > 1) {
+                // Keep the first (newest), delete the rest
+                List<WeatherData> oldData = allData.subList(1, allData.size());
                 weatherDataRepository.deleteAll(oldData);
                 logger.info("Deleted {} old weather entries for {}", oldData.size(), resort.getName());
             }
-            
-            WeatherData weatherData = mapToWeatherData(resort, response);
-            weatherDataRepository.save(weatherData);
             
             printWeatherData(resort, weatherData);
         }
