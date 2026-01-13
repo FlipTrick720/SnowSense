@@ -6,7 +6,6 @@ services:
     dockerContext: .
     plan: free
     region: frankfurt
-    branch: frontend
     envVars:
       # Backend runtime variables
       - key: SERVER_PORT
