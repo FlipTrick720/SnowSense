@@ -30,11 +30,12 @@ public class RecommendationService {
         this.avalancheDataRepository = avalancheDataRepository;
     }
 
-    /* ---------------- IDEAL CONDITIONS ---------------- */
+    /* ---------------- IDEAL / THRESHOLD VALUES ---------------- */
 
-    private static final double IDEAL_SNOW_DEPTH = 0.60; // meters
-    private static final double IDEAL_TEMPERATURE = -4.0; // °C
-    private static final double IDEAL_WIND_SPEED = 10.0; // km/h
+    private static final double MIN_GOOD_SNOW = 0.30;      // 30 cm
+    private static final double MAX_GOOD_SNOW = 1.50;      // 1.5 m
+    private static final double WIND_THRESHOLD = 15.0;     // km/h
+    private static final double IDEAL_TEMPERATURE = -4.0;  // °C
 
     /* ---------------- PUBLIC API ---------------- */
 
@@ -90,16 +91,28 @@ public class RecommendationService {
     private double calculatePenalty(WeatherData w) {
         double penalty = 0;
 
+        // 🌨 Snow depth logic
         if (w.getSnowDepth() != null) {
-            penalty += Math.abs(w.getSnowDepth() - IDEAL_SNOW_DEPTH) * 100;
+            double snow = w.getSnowDepth();
+
+            if (snow < MIN_GOOD_SNOW) {
+                // Strong penalty for insufficient snow
+                penalty += (MIN_GOOD_SNOW - snow) * 200;
+            } else if (snow > MAX_GOOD_SNOW) {
+                // Small consistent penalty for very deep snow
+                penalty += 20;
+            }
+            // No penalty in the ideal range (30 cm – 1.5 m)
         }
 
+        // 🌡 Temperature (unchanged)
         if (w.getTemperature() != null) {
             penalty += Math.abs(w.getTemperature() - IDEAL_TEMPERATURE) * 5;
         }
 
-        if (w.getWindSpeed() != null) {
-            penalty += Math.abs(w.getWindSpeed() - IDEAL_WIND_SPEED) * 2;
+        // 🌬 Wind logic
+        if (w.getWindSpeed() != null && w.getWindSpeed() > WIND_THRESHOLD) {
+            penalty += (w.getWindSpeed() - WIND_THRESHOLD) * 3;
         }
 
         return penalty;
