@@ -2,6 +2,8 @@
 
 This document explains **how the ski resort recommendation system works** and **how to call it via the API**.
 
+---
+
 ## Overview
 
 The recommendation system suggests the **top ski resorts** for a user based on:
@@ -9,45 +11,91 @@ The recommendation system suggests the **top ski resorts** for a user based on:
 * **User location (latitude & longitude)**
 * **Current weather conditions**
 * **Avalanche safety bulletins**
-* **Ideal skiing conditions**
+* **Realistic skiing condition thresholds**
 
-The goal is to return **safe, nearby resorts with the best current skiing conditions**.
+The goal is to return **safe, nearby resorts with good and usable skiing conditions**, rather than mathematically “perfect” weather.
+
+---
 
 ## High-Level Flow
 
 1. Identify the **20 closest ski resorts** to the user
 2. Exclude resorts located in **dangerous avalanche regions**
 3. Score remaining resorts using a **penalty-based weather model**
-4. Sort by lowest penalty score
+4. Sort resorts by **lowest total penalty**
 5. Return the **top 5 recommended resorts**
 
-## Ideal Skiing Conditions
+---
 
-The system defines a baseline for a "perfect" ski day:
+## Ideal & Acceptable Skiing Conditions
 
-| Condition   | Ideal Value |
-| ----------- | ----------- |
-| Snow Depth  | 0.60 m      |
-| Temperature | -4 °C       |
-| Wind Speed  | 10 km/h     |
+Instead of a single “perfect value”, the system uses **realistic ranges and thresholds**.
 
-Real-world conditions are compared against these values to calculate penalties.
+| Condition   | Acceptable / Ideal Range     |
+| ----------- | ---------------------------- |
+| Snow Depth  | **0.30 m – 1.50 m**          |
+| Temperature | Ideal at **-4 °C**           |
+| Wind Speed  | No penalty up to **15 km/h** |
+
+Conditions outside these ranges incur penalties.
+
+---
 
 ## Penalty Scoring Model
 
-Each resort receives a **penalty score** based on how far its weather deviates from ideal conditions.
-
-| Factor      | Formula | Weight         | Importance |        |                  |
-| ----------- | ------- | -------------- | ---------- | ------ | ---------------- |
-| Snow depth  | `       | actual - ideal | × 100`     | High   | Ski quality      |
-| Temperature | `       | actual - ideal | × 5`       | Medium | Comfort          |
-| Wind speed  | `       | actual - ideal | × 2`       | Low    | Safety & comfort |
+Each resort receives a **penalty score** based on how much its conditions deviate from safe and enjoyable skiing.
 
 **Lower penalty = better recommendation**
 
-## Avalanche Safety Filtering
+---
 
-Before scoring, the system removes any resorts located in avalanche-danger regions.
+### Snow Depth Penalty
+
+Snow depth is treated as a **range-based factor**:
+
+| Condition          | Penalty Logic                          |
+| ------------------ | -------------------------------------- |
+| `< 0.30 m (30 cm)` | Strong penalty proportional to deficit |
+| `0.30 m – 1.50 m`  | **No penalty (ideal range)**           |
+| `> 1.50 m`         | Small fixed penalty                    |
+
+This reflects real skiing conditions:
+
+* Too little snow → poor coverage & safety issues
+* Very deep snow → operational difficulty (but still skiable)
+
+---
+
+### Temperature Penalty
+
+Temperature is compared to the ideal skiing temperature:
+
+```
+penalty += |actualTemp − (-4°C)| × 5
+```
+
+| Importance | Reason                 |
+| ---------- | ---------------------- |
+| Medium     | Comfort & snow quality |
+
+---
+
+### Wind Speed Penalty
+
+Wind is **only penalized when it becomes disruptive**:
+
+| Condition   | Penalty Logic                  |
+| ----------- | ------------------------------ |
+| `≤ 15 km/h` | **No penalty**                 |
+| `> 15 km/h` | Penalty proportional to excess |
+
+This avoids penalizing calm or mildly windy conditions.
+
+---
+
+## Avalanche Safety Filtering (Hard Rule)
+
+Before scoring, the system **fully excludes** resorts located in avalanche-danger regions.
 
 ### Dangerous avalanche levels
 
@@ -56,16 +104,20 @@ Before scoring, the system removes any resorts located in avalanche-danger regio
 * High
 * Very High
 
-If a resort is located in a region with any of the above active bulletins, it is **fully excluded** from recommendations.
+If a resort falls under any active bulletin with the above levels, it is **not considered at all**, regardless of weather quality.
+
+> **Avalanche safety always overrides weather and distance.**
+
+---
 
 ## Distance Calculation
 
-Distances between the user and ski resorts are calculated using the **Haversine formula**, ensuring accurate Earth-surface distance measurements in kilometers.
+Distances between the user and ski resorts are calculated using the **Haversine formula**, ensuring accurate Earth-surface distance measurements (in kilometers).
 
 Distance is used to:
 
-* Identify the 20 closest resorts
-* Display proximity information to the user
+* Select the **20 closest resorts**
+* Provide proximity context in the response
 
 ---
 
@@ -73,16 +125,18 @@ Distance is used to:
 
 ### `RecommendationService`
 
-* Performs distance calculation
-* Filters avalanche-risk resorts
-* Computes penalty scores
-* Produces ranked recommendations
+Responsible for:
+
+* Distance calculations
+* Avalanche safety filtering
+* Weather-based penalty scoring
+* Ranking and selecting top resorts
 
 ### Repositories Used
 
-* `SkiResortRepository` – resort metadata & locations
+* `SkiResortRepository` – resort metadata & coordinates
 * `WeatherDataRepository` – latest weather per resort
-* `AvalancheDataRepository` – active avalanche bulletins
+* `AvalancheDataRepository` – currently valid avalanche bulletins
 
 ---
 
@@ -132,21 +186,22 @@ POST /api/recommendation/skiresort
 | --------------- | ---------------------------------- |
 | status          | Request status                     |
 | count           | Number of resorts returned         |
-| recommendations | Ranked list of recommended resorts |
+| recommendations | Ranked list (lowest penalty first) |
 
 ---
 
 ## Design Philosophy
 
-* **Safety-first**: avalanche risks override all other factors
-* **Explainable logic**: deterministic scoring, easy to audit
-* **Extensible**: can be enhanced with user preferences or ML models
+* **Safety-first**: avalanche risk is a hard exclusion
+* **Realistic rules**: thresholds over theoretical ideals
+* **Explainable logic**: deterministic, auditable scoring
+* **User-centric**: prioritizes skiable, not “perfect”, conditions
 
 ---
 
 ## Future Enhancements
 
-* User skill level weighting
-* Crowd density & pricing
-* Resort capacity & open slopes
-* Machine-learning-based scoring
+* User skill-level weighting (beginner vs expert)
+* Crowd density & pricing data
+* Open slopes & lift availability
+* Machine-learning-based scoring adjustments
