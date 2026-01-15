@@ -1,6 +1,8 @@
 .vscode/
 .idea/
 .kiro/
+/z_local_output
+/z_render_output
 
 # Firebase credentials
 firebase-service-account.json
@@ -47,6 +49,7 @@ notification-frontend/public/firebase-messaging-sw.js
 
 #firebasesdk
 notification-backend/snowsense-a06fc-firebase-adminsdk-fbsvc-296c1634a9.json
+poc-*
 
 #copy file
 /app/src/components/ResortList copy.tsx
