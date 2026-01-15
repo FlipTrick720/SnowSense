@@ -9,22 +9,24 @@ import com.notification.repository.SkiResortLiftRepository;
 import com.notification.repository.SkiResortRepository;
 import com.notification.repository.SkiResortSlopeRepository;
 import com.notification.service.skiResortSites.BergfexSkiResortSite;
+import java.util.List;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class SkiResortService
-{
+public class SkiResortService {
+
 	private final SkiResortRepository _skiResortRepository;
 	private final SkiResortLiftRepository _skiResortLiftRepository;
 	private final SkiResortSlopeRepository _skiResortSlopeRepository;
 
-	public SkiResortService(SkiResortRepository skiResortRepository, SkiResortLiftRepository skiResortLiftRepository, SkiResortSlopeRepository skiResortSlopeRepository)
-	{
+	public SkiResortService(
+		SkiResortRepository skiResortRepository,
+		SkiResortLiftRepository skiResortLiftRepository,
+		SkiResortSlopeRepository skiResortSlopeRepository
+	) {
 		_skiResortRepository = skiResortRepository;
 		_skiResortLiftRepository = skiResortLiftRepository;
 		_skiResortSlopeRepository = skiResortSlopeRepository;
@@ -34,7 +36,7 @@ public class SkiResortService
 	 * Scrape ski resort status data for all ski resorts
 	 * Scheduled to run every hour
 	 */
-	@Scheduled(cron = "0 0 * * * *")  // Every hour at :00
+	@Scheduled(cron = "0 0 * * * *") // Every hour at :00
 	@EventListener(ApplicationReadyEvent.class)
 	public void scrapeSkiResortStatusForAllResorts()
 	{
@@ -49,7 +51,7 @@ public class SkiResortService
 							.setArgs(java.util.List.of("--ignore-certificate-errors"))
 			);
 			BrowserContext context = browser.newContext(
-					new Browser.NewContextOptions().setIgnoreHTTPSErrors(true)
+				new Browser.NewContextOptions().setIgnoreHTTPSErrors(true)
 			);
 			Page page = context.newPage();
 
@@ -139,34 +141,51 @@ public class SkiResortService
 		}
 	}
 
-	private static void sleep(long ms)
-	{
-		try
-		{
+	private static void sleep(long ms) {
+		try {
 			java.util.concurrent.TimeUnit.MILLISECONDS.sleep(ms);
-		} catch (InterruptedException e)
-		{
+		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
 	}
 
-	public List<SkiResortLift> getAllSkiResortLiftData()
-	{
+	// Get ski resort data
+
+	public List<SkiResort> getAllSkiResorts() {
+		return _skiResortRepository.findAll();
+	}
+
+	public SkiResort getSkiResortById(Long resortId) {
+		return _skiResortRepository
+			.findById(resortId)
+			.orElseThrow(() ->
+				new IllegalArgumentException(
+					"Ski resort not found with id: " + resortId
+				)
+			);
+	}
+
+	// Get ski resort lift data
+
+	public List<SkiResortLift> getAllSkiResortLiftData() {
 		return _skiResortLiftRepository.findAll();
 	}
 
-	public List<SkiResortLift> getSkiResortLiftDataForResort(Long resortId)
-	{
-		return _skiResortLiftRepository.findBySkiResortIdOrderByCreatedAtDesc(resortId);
+	public List<SkiResortLift> getSkiResortLiftDataForResort(Long resortId) {
+		return _skiResortLiftRepository.findBySkiResortIdOrderByCreatedAtDesc(
+			resortId
+		);
 	}
 
-	public List<SkiResortSlope> getAllSkiResortSlopeData()
-	{
+	// Get ski resort slope data
+
+	public List<SkiResortSlope> getAllSkiResortSlopeData() {
 		return _skiResortSlopeRepository.findAll();
 	}
 
-	public List<SkiResortSlope> getSkiResortSlopeDataForResort(Long resortId)
-	{
-		return _skiResortSlopeRepository.findBySkiResortIdOrderByCreatedAtDesc(resortId);
+	public List<SkiResortSlope> getSkiResortSlopeDataForResort(Long resortId) {
+		return _skiResortSlopeRepository.findBySkiResortIdOrderByCreatedAtDesc(
+			resortId
+		);
 	}
 }
