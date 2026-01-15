@@ -53,12 +53,14 @@ const ResortPage: React.FC<ResortPageProps> = ({ match }) => {
     const openSlopesCount = pageSlopes.filter(s => s.isOpen).length;
     const totalSlopes = pageSlopes.length;
 
-    const getDangerColor = (level: string) => {
+    const getDangerColor = (level: string | null | undefined) => {
         if (!level) return 'medium';
         switch (level.toLowerCase()) {
             case 'low': return 'success';
             case 'moderate': return 'warning';
+            case 'considerable': return 'danger';
             case 'high': return 'danger';
+            case 'very high': return 'danger';
             default: return 'medium';
         }
     };
@@ -87,7 +89,7 @@ const ResortPage: React.FC<ResortPageProps> = ({ match }) => {
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
                             <IonIcon icon={alertCircle} color={getDangerColor(pageDetail.dangerLevel)} />
                             <IonText color={getDangerColor(pageDetail.dangerLevel)} style={{fontWeight: '500'}}>
-                                {pageDetail.dangerLevel?.toUpperCase()} Danger
+                                {pageDetail.dangerLevel ? `${pageDetail.dangerLevel.toUpperCase()} Danger` : 'N/A'}
                             </IonText>
                         </div>
                         <p style={{ margin: '5px 0 0', color: MEDIUM_TEXT_COLOR }}>
@@ -98,6 +100,82 @@ const ResortPage: React.FC<ResortPageProps> = ({ match }) => {
                         </p>
                     </div>
                 </div>
+
+                {/* CRITICAL ELEVATION STAFFING INFO */}
+                {(pageDetail.elevationLower || pageDetail.elevationUpper) && (
+                    <div style={{ backgroundColor: '#fff3cd', borderRadius: '12px', padding: '12px', marginBottom: '16px', border: '2px solid #ff9800' }}>
+                        <div style={{ fontSize: '13px', fontWeight: '600', color: '#856404', marginBottom: '6px' }}>
+                            Elevation-Specific Hazard
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#856404', lineHeight: '1.5' }}>
+                            {pageDetail.elevationLower && (
+                                <div>Lower bound: {pageDetail.elevationLower === 'treeline' ? 'Treeline' : `${pageDetail.elevationLower}m`}</div>
+                            )}
+                            {pageDetail.elevationUpper && (
+                                <div>Upper bound: {pageDetail.elevationUpper === 'treeline' ? 'Treeline' : `${pageDetail.elevationUpper}m`}</div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {/* HAZARD ASPECTS - which slopes are affected */}
+                {pageDetail.aspects && (
+                    <div style={{ backgroundColor: '#e7f3ff', borderRadius: '12px', padding: '12px', marginBottom: '16px' }}>
+                        <div style={{ fontSize: '13px', fontWeight: '600', color: '#004085', marginBottom: '8px' }}>
+                            Affected Aspects
+                        </div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                            {pageDetail.aspects.split(',').map((aspect: string) => (
+                                <span key={aspect.trim()} style={{ backgroundColor: '#004085', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '600' }}>
+                                    {aspect.trim()}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* PROBLEM TYPES - what's the actual hazard */}
+                {pageDetail.problemTypes && (
+                    <div style={{ backgroundColor: '#f8d7da', borderRadius: '12px', padding: '12px', marginBottom: '16px' }}>
+                        <div style={{ fontSize: '13px', fontWeight: '600', color: '#721c24', marginBottom: '8px' }}>
+                            Avalanche Problem Types
+                        </div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                            {pageDetail.problemTypes.split(",").map((problem: string) => {
+                                const cleanProblem = problem.trim().replace(/_/g, ' ');
+                                return (
+                                    <span key={problem.trim()} style={{ backgroundColor: '#721c24', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '600', textTransform: 'capitalize' }}>
+                                        {cleanProblem}
+                                    </span>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+
+                {/* SAFETY RECOMMENDATION */}
+                {pageDetail.recommendation && (
+                    <div style={{ backgroundColor: '#d1ecf1', borderRadius: '12px', padding: '12px', marginBottom: '16px', border: '1px solid #0c5460' }}>
+                        <div style={{ fontSize: '13px', fontWeight: '600', color: '#0c5460', marginBottom: '6px' }}>
+                            Safety Recommendation
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#0c5460', lineHeight: '1.5' }}>
+                            {pageDetail.recommendation}
+                        </div>
+                    </div>
+                )}
+
+                {/* HIGHLIGHTS - key warnings */}
+                {pageDetail.highlights && (
+                    <div style={{ backgroundColor: '#e8f4f8', borderRadius: '12px', padding: '12px', marginBottom: '16px' }}>
+                        <div style={{ fontSize: '13px', fontWeight: '600', color: '#1b5e79', marginBottom: '6px' }}>
+                            Key Highlights
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#1b5e79', lineHeight: '1.6' }}>
+                            {pageDetail.highlights}
+                        </div>
+                    </div>
+                )}
 
                 {/* Summary card */}
                 <div style={{ backgroundColor: '#7c7c7ca9', borderRadius: '16px', padding: '16px', marginBottom: '24px' }}>

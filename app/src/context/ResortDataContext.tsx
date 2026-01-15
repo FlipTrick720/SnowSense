@@ -7,10 +7,24 @@ export interface ResortDetail {
     latitude: number;
     longitude: number;
     dangerLevel: string; 
+    dangerLevelAfternoon?: string;
     recommendation: string; 
     safetyStatus: string; 
     avalancheRegionName: string; 
-    tendencyType: string; 
+    avalancheRegionCode: string;
+    tendencyType: string;
+    // Elevation info - critical for safety
+    elevationLower?: string;
+    elevationUpper?: string;
+    // Hazard aspects (N, NE, E, SE, S, SW, W, NW)
+    aspects?: string;
+    // Problem types (wind_slab, persistent_weak_layers, etc.)
+    problemTypes?: string;
+    // Detailed safety information
+    highlights?: string;
+    elevation?: number;
+    validFrom?: string;
+    validUntil?: string;
 }
 
 export interface Lift { id: number; name: string; isOpen: boolean; lengthInMeters: number; skiResort: { id: number; name: string }; }
