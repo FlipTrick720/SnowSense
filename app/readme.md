@@ -2,7 +2,7 @@
 
 A full-stack mobile application built with **Ionic React** and **Spring Boot** that provides real-time ski resort information, including avalanche forecasts, lift availability, slope status, and weather conditions.
 
-## 📱 Features
+## Features
 
 * **Live Dashboard:** View global lift statistics and personalized resort recommendations based on your location.
 * **Resort List:** Dynamic list of resorts displaying live temperature and open lift/slope counts.
@@ -10,7 +10,7 @@ A full-stack mobile application built with **Ionic React** and **Spring Boot** t
 * **Resort Details:** Detailed view for every resort showing avalanche danger levels, specific lift status, and slope difficulty.
 * **Geolocation:** Automatically finds and recommends the nearest resort to you that has open lifts.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Frontend:** Ionic Framework 7, React, TypeScript
 * **Backend:** Java Spring Boot
@@ -18,7 +18,7 @@ A full-stack mobile application built with **Ionic React** and **Spring Boot** t
 * **Icons:** Ionicons & React Icons (`fa`)
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -69,7 +69,7 @@ The frontend relies on the backend running on port `8080`.
 
 ---
 
-## 📡 API Architecture
+## API Architecture
 
 The application uses a **Context API (`ResortDataContext`)** to fetch data once on startup to reduce server load. It expects the following endpoints at `http://localhost:8080`:
 
@@ -83,7 +83,7 @@ The application uses a **Context API (`ResortDataContext`)** to fetch data once 
 
 ---
 
-## ⚠️ Troubleshooting
+## Troubleshooting
 
 **1. "Network Error" or Empty Data**
 * Ensure the Spring Boot server is running on port 8080.

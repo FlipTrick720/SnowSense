@@ -101,18 +101,18 @@ const ResortPage: React.FC<ResortPageProps> = ({ match }) => {
                     </div>
                 </div>
 
-                {/* ⚠️ CRITICAL ELEVATION STAFFING INFO */}
+                {/* CRITICAL ELEVATION STAFFING INFO */}
                 {(pageDetail.elevationLower || pageDetail.elevationUpper) && (
                     <div style={{ backgroundColor: '#fff3cd', borderRadius: '12px', padding: '12px', marginBottom: '16px', border: '2px solid #ff9800' }}>
                         <div style={{ fontSize: '13px', fontWeight: '600', color: '#856404', marginBottom: '6px' }}>
-                            ⚠️ Elevation-Specific Hazard
+                            Elevation-Specific Hazard
                         </div>
                         <div style={{ fontSize: '12px', color: '#856404', lineHeight: '1.5' }}>
                             {pageDetail.elevationLower && (
-                                <div>Lower bound: {pageDetail.elevationLower}m</div>
+                                <div>Lower bound: {pageDetail.elevationLower === 'treeline' ? 'Treeline' : `${pageDetail.elevationLower}m`}</div>
                             )}
                             {pageDetail.elevationUpper && (
-                                <div>Upper bound: {pageDetail.elevationUpper}m</div>
+                                <div>Upper bound: {pageDetail.elevationUpper === 'treeline' ? 'Treeline' : `${pageDetail.elevationUpper}m`}</div>
                             )}
                         </div>
                     </div>
