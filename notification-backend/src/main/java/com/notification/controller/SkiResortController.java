@@ -42,15 +42,6 @@ public class SkiResortController {
 	}
 
 	/**
-	 * Get all ski resorts
-	 * GET /api/skiresort
-	 */
-	@GetMapping
-	public ResponseEntity<List<SkiResort>> getAllSkiResorts() {
-		return ResponseEntity.ok(_skiResortService.getAllSkiResorts());
-	}
-
-	/**
 	 * Get all ski resort lift status data from database
 	 * GET /api/skiresort/lifts
 	 */
@@ -66,17 +57,6 @@ public class SkiResortController {
 	@GetMapping("/slopes")
 	public ResponseEntity<List<SkiResortSlope>> getAllSkiResortSlopeData() {
 		return ResponseEntity.ok(_skiResortService.getAllSkiResortSlopeData());
-	}
-
-	/**
-	 * Get ski resort by ID
-	 * GET /api/skiresort/{resortId}
-	 */
-	@GetMapping("/{resortId}")
-	public ResponseEntity<SkiResort> getSkiResortById(
-		@PathVariable Long resortId
-	) {
-		return ResponseEntity.ok(_skiResortService.getSkiResortById(resortId));
 	}
 
 	/**
