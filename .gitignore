@@ -1,6 +1,8 @@
 .vscode/
 .idea/
 .kiro/
+/z_local_output
+/z_render_output
 
 # Firebase credentials
 firebase-service-account.json
