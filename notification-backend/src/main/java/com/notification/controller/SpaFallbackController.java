@@ -2,6 +2,7 @@ package com.notification.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * Fallback controller for SPA routing
@@ -9,23 +10,30 @@ import org.springframework.web.bind.annotation.GetMapping;
  * Serves index.html for all frontend routes that are not API endpoints.
  * This allows direct access to routes like /app/home, /app/search, etc.
  * without getting 404 errors - a common issue with single page applications.
- * 
- * The regex pattern ^(?!api) excludes /api/* routes so they're handled by REST controllers.
  */
 @Controller
 public class SpaFallbackController {
 
     /**
-     * Catch-all for non-API routes
-     * Forwards to / which Spring resolves to index.html from static resources
+     * Catch-all handler for SPA routes
+     * Handles paths like /app/home, /app/search, /tabs, etc.
      * 
-     * Excludes:
-     * - /api/* (REST API endpoints)
-     * - Static resources (handled by Spring's default resource handling)
+     * Note: Must be the LAST route handler (lowest priority)
+     * API routes (@RestController) and static resources are handled first
      */
-    @GetMapping(value = "/**/{path:^(?!api|[.]*).*$}")
-    public String forwardToIndexHtml() {
+    @GetMapping("/{x:^(?!api).*}")
+    public String forward() {
+        return "forward:/index.html";
+    }
+
+    /**
+     * Handle multi-segment paths like /app/home/details
+     */
+    @GetMapping("/{x:^(?!api).*}/**")
+    public String forwardMultiSegment() {
         return "forward:/index.html";
     }
 }
+
+
 
