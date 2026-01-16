@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/bash 
 
-# Verification script for environment setup
+# Verification script for environment setup (AI Generated)
 # Run this before pushing to git
 
 echo "🔍 Verifying environment setup..."

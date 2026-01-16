@@ -1,7 +1,7 @@
-# Multi-stage build for Spring Boot + React app
+# Multi-stage build for Spring Boot + React/Ionic app
 FROM node:20-alpine AS frontend-build
 
-# Accept build arguments for frontend env vars
+# Accept build arguments for app env vars
 ARG VITE_FIREBASE_API_KEY
 ARG VITE_FIREBASE_AUTH_DOMAIN
 ARG VITE_FIREBASE_PROJECT_ID
@@ -22,9 +22,9 @@ ENV VITE_FIREBASE_VAPID_KEY=$VITE_FIREBASE_VAPID_KEY
 ENV VITE_API_URL=$VITE_API_URL
 
 WORKDIR /app/frontend
-COPY notification-frontend/package*.json ./
+COPY app/package*.json ./
 RUN npm ci
-COPY notification-frontend/ ./
+COPY app/ ./
 RUN npm run build
 
 # Backend build stage
@@ -40,6 +40,29 @@ RUN mvn package -DskipTests
 
 # Runtime stage
 FROM eclipse-temurin:17-jre
+
+# Install Playwright dependencies for web scraping
+RUN apt-get update && apt-get install -y \
+    libglib2.0-0 \
+    libnspr4 \
+    libnss3 \
+    libdbus-1-3 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libatspi2.0-0 \
+    libx11-6 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxext6 \
+    libxfixes3 \
+    libxrandr2 \
+    libgbm1 \
+    libxcb1 \
+    libxkbcommon0 \
+    libasound2t64 \
+    libcairo2 \
+    libpango-1.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY --from=backend-build /app/target/*.jar app.jar

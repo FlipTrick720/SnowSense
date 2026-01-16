@@ -1,0 +1,17 @@
+name: Architecture Fitness Functions
+
+on: [push, pull_request]
+
+jobs:
+  fitness-functions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Run Fitness Functions
+        run: |
+          cd notification-backend
+          mvn test -Dtest=ServiceCouplingFitnessFunctionTest

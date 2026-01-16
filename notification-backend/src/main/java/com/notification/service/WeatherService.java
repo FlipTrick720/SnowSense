@@ -7,6 +7,8 @@ import com.notification.repository.SkiResortRepository;
 import com.notification.repository.WeatherDataRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -33,10 +35,19 @@ public class WeatherService {
     }
     
     /**
-     * Scrape weather data for all ski resorts
-     * Scheduled to run every 5 minutes
+     * Scrape weather data for all ski resorts on application startup
      */
-    @Scheduled(cron = "0 */5 * * * *")  // Every 5 minutes
+    @EventListener(ApplicationReadyEvent.class)
+    public void scrapeWeatherOnStartup() {
+        logger.info("Application started - triggering initial weather scrape");
+        scrapeWeatherForAllResorts();
+    }
+    
+    /**
+     * Scrape weather data for all ski resorts
+     * Scheduled to run every 30 minutes (runs on startup via @EventListener)
+     */
+    @Scheduled(cron = "0 */30 * * * *")  // Every 30 minutes
     public void scrapeWeatherForAllResorts() {
         List<SkiResort> resorts = skiResortRepository.findAll();
         logger.info("Starting weather scrape for {} ski resorts", resorts.size());
@@ -65,6 +76,15 @@ public class WeatherService {
         if (response != null && response.getCurrent() != null) {
             WeatherData weatherData = mapToWeatherData(resort, response);
             weatherDataRepository.save(weatherData);
+            
+            // Keep only the latest weather record for this resort (delete older ones)
+            List<WeatherData> allData = weatherDataRepository.findBySkiResortIdOrderByTimestampDesc(resort.getId());
+            if (allData.size() > 1) {
+                // Keep the first (newest), delete the rest
+                List<WeatherData> oldData = allData.subList(1, allData.size());
+                weatherDataRepository.deleteAll(oldData);
+                logger.info("Deleted {} old weather entries for {}", oldData.size(), resort.getName());
+            }
             
             printWeatherData(resort, weatherData);
         }
@@ -122,21 +142,7 @@ public class WeatherService {
      * Print weather data to terminal
      */
     private void printWeatherData(SkiResort resort, WeatherData data) {
-        logger.info("========================================");
         logger.info("Weather Data for: {}", resort.getName());
-        logger.info("========================================");
-        logger.info("Timestamp: {}", data.getTimestamp());
-        logger.info("Temperature: {}°C", data.getTemperature());
-        logger.info("Wind Speed: {} km/h", data.getWindSpeed());
-        logger.info("Wind Direction: {}°", data.getWindDirection());
-        logger.info("Precipitation: {} mm", data.getPrecipitation());
-        logger.info("Snowfall: {} cm", data.getSnowfall());
-        logger.info("Snow Depth: {} cm", data.getSnowDepth());
-        logger.info("Cloud Cover: {}%", data.getCloudCover());
-        logger.info("Visibility: {} m", data.getVisibility());
-        logger.info("Freezing Level: {} m", data.getFreezingLevel());
-        logger.info("Weather Code: {}", data.getWeatherCode());
-        logger.info("========================================\n");
     }
     
     /**
