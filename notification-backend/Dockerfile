@@ -14,46 +14,13 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime image
-FROM eclipse-temurin:21-jre-jammy
+# Use official Playwright Java image with all browser dependencies pre-installed
+# This avoids downloading browsers at runtime and fixes missing dependencies
+FROM mcr.microsoft.com/playwright/java:v1.41.0-jammy
 
-# Install Playwright dependencies for browser automation
+# Install curl for health checks
 RUN apt-get update && apt-get install -y \
-    libgconf-2-4 \
-    libxkbcommon0 \
-    libxss1 \
-    fonts-liberation \
-    libappindicator3-1 \
-    libasound2 \
-    libatk1.0-0 \
-    libc6 \
-    libcairo2 \
-    libcups2 \
-    libdbus-1-3 \
-    libexpat1 \
-    libgbm1 \
-    libgdk-pixbuf2.0-0 \
-    libglib2.0-0 \
-    libgtk-3-0 \
-    libx11-6 \
-    libx11-xcb1 \
-    libxcb1 \
-    libxcomposite1 \
-    libxcursor1 \
-    libxdamage1 \
-    libxdmcp6 \
-    libxext6 \
-    libxfixes3 \
-    libxfont2 \
-    libxinerama1 \
-    libxrandr2 \
-    libxrender1 \
-    libxshmfence1 \
-    libnspr4 \
-    libnss3 \
-    libxslt1.1 \
-    libxt6 \
-    libxtst6 \
-    wget \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -67,6 +34,12 @@ EXPOSE 8080
 # Set environment variables
 ENV SERVER_PORT=8080
 ENV JAVA_OPTS="-Xmx512m -Xms256m"
+
+# Health check: curl /api/health endpoint
+# This ensures the container is marked as healthy immediately when Spring Boot starts
+# The scraping runs asynchronously in the background, so this doesn't wait for it to complete
+HEALTHCHECK --interval=10s --timeout=5s --start-period=15s --retries=3 \
+    CMD curl -f http://localhost:8080/api/health || exit 1
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
