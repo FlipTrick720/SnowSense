@@ -68,7 +68,7 @@ public class SkiResortService
 					continue;
 				}
 
-				for (SkiResortLift lift : bergfexInfrastructureStatus.getLifts())
+				for (SkiResortLift lift : bergfexInfrastructureStatus.getLiftsWithoutDuplicates())
 				{
 					SkiResortLift existingLift = _skiResortLiftRepository.findAll().stream()
 							.filter(l -> l.getSkiResort().getId().equals(resort.getId()))
