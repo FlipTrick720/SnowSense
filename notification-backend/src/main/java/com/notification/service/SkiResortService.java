@@ -37,7 +37,6 @@ public class SkiResortService {
 	 * Scheduled to run every hour
 	 */
 	@Scheduled(cron = "0 0 * * * *") // Every hour at :00
-	@EventListener(ApplicationReadyEvent.class)
 	public void scrapeSkiResortStatusForAllResorts()
 	{
 		System.out.println("Starting ski resort scraping for all resorts...");
