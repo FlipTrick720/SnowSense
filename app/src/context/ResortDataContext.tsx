@@ -36,6 +36,11 @@ export interface NearestResort {
     distance: number | null;
 }
 
+export interface UserLocation {
+    latitude: number;
+    longitude: number;
+}
+
 interface ResortDataContextType {
     avalancheData: ResortDetail[];
     lifts: Lift[];
@@ -45,6 +50,7 @@ interface ResortDataContextType {
     error: string | null;
     refreshData: () => Promise<void>;
     nearestResort: NearestResort;
+    userLocation: UserLocation | null;
 }
 
 const ResortDataContext = createContext<ResortDataContextType | undefined>(undefined);
@@ -69,6 +75,7 @@ export const ResortDataProvider: React.FC<{ children: ReactNode }> = ({ children
     const [weather, setWeather] = useState<Weather[]>([]);
     
     const [nearestResort, setNearestResort] = useState<NearestResort>({ resort: null, distance: null });
+    const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -82,6 +89,9 @@ export const ResortDataProvider: React.FC<{ children: ReactNode }> = ({ children
             (position) => {
                 const userLat = position.coords.latitude;
                 const userLon = position.coords.longitude;
+                
+                // Store user location in state
+                setUserLocation({ latitude: userLat, longitude: userLon });
                 
                 // calculation distance for ALL resorts 
                 const resortsWithDist = resorts.map(resort => {
@@ -154,7 +164,7 @@ export const ResortDataProvider: React.FC<{ children: ReactNode }> = ({ children
 
     return (
         <ResortDataContext.Provider value={{ 
-            avalancheData, lifts, slopes, weather, loading, error, refreshData: fetchData, nearestResort 
+            avalancheData, lifts, slopes, weather, loading, error, refreshData: fetchData, nearestResort, userLocation 
         }}>
             {children}
         </ResortDataContext.Provider>
