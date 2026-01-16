@@ -48,6 +48,8 @@ RUN apt-get update && apt-get install -y \
     libxrandr2 \
     libxrender1 \
     libxshmfence1 \
+    libnspr4 \
+    libnss3 \
     libxslt1.1 \
     libxt6 \
     libxtst6 \
