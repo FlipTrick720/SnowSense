@@ -2,8 +2,8 @@ services:
   - type: web
     name: snowsense
     runtime: docker
-    dockerfilePath: ./app/Dockerfile
-    dockerContext: .
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./app
     plan: free
     region: frankfurt
     envVars:

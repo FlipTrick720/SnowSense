@@ -6,13 +6,13 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package files
-COPY app/package*.json ./
+COPY package*.json ./
 
 # Install dependencies
 RUN npm ci
 
 # Copy source code
-COPY app/ .
+COPY . .
 
 # Build with Vite
 RUN npm run build
@@ -20,7 +20,7 @@ RUN npm run build
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 
-# Copy nginx config
+# Copy nginx config with API proxy
 COPY <<EOF /etc/nginx/conf.d/default.conf
 server {
     listen 8080;
@@ -36,7 +36,7 @@ server {
 
     # API proxy - forward to HuggingFace backend
     location /api/ {
-        proxy_pass \${VITE_API_URL}/;
+        proxy_pass https://FlipTrick-snowsense.hf.space/;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
@@ -46,7 +46,7 @@ server {
         proxy_buffering off;
     }
 
-    # Cache control
+    # Cache control for static assets
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
         expires 1d;
         add_header Cache-Control "public, immutable";
