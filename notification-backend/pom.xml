@@ -27,6 +27,14 @@
 
     <dependencies>
 
+        <!-- ArchUnit for Java static analysis -->
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5-api</artifactId>
+            <version>1.4.1</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Playwright for web scraping -->
         <dependency>
             <groupId>com.microsoft.playwright</groupId>
