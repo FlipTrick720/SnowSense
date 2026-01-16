@@ -199,9 +199,43 @@ POST /api/recommendation/skiresort
 
 ---
 
+## Updated Avalanche Data Display (Jan 2026)
+
+The system now displays **comprehensive avalanche safety information** for each resort:
+
+### Elevation-Specific Hazards
+- Shows exact elevation bounds where danger applies
+- Handles both numeric heights (e.g., "2000m") and reference points (e.g., "Treeline")
+- Clearly indicates if hazard only applies to certain altitudes
+
+### Affected Aspects (Slopes)
+- Displays which compass directions are affected (N, NE, E, SE, S, SW, W, NW)
+- Helps users identify safe descent routes
+
+### Avalanche Problem Types
+- Wind slab
+- Persistent weak layers
+- (Other types per official CAAML format)
+- Explains the specific hazard mechanism
+
+### Safety Recommendations & Highlights
+- Safety recommendations from official bulletins
+- Key highlights about snow conditions and travel advisory
+
+---
+
+## Data Update Schedule
+
+- **Avalanche data**: Updated **every 60 minutes** from official sources
+- **Weather data**: Updated hourly
+- **Lift/slope status**: Real-time monitoring
+
+---
+
 ## Future Enhancements
 
 * User skill-level weighting (beginner vs expert)
 * Crowd density & pricing data
 * Open slopes & lift availability
 * Machine-learning-based scoring adjustments
+* Telegram/SMS alerts for high-danger resorts
