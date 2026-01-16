@@ -17,6 +17,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SkiResortService
 {
@@ -62,35 +64,12 @@ public class SkiResortService
 			
 			for (SkiResort resort : resorts)
 			{
-				SkiResortInfrastructure bergfexInfrastructureStatus;
-				try
-				{
-					bergfexInfrastructureStatus = new BergfexSkiResortSite(resort).scrapeAllInfrastructureStatus(page);
-				} catch (TimeoutError e)
-				{
-					System.out.println("Timeout waiting for status table for ski resort: " + resort.getName());
-					continue;
-				}
-
-				for (SkiResortLift lift : bergfexInfrastructureStatus.getLiftsWithoutDuplicates())
-				{
-					SkiResortLift existingLift = _skiResortLiftRepository.findAll().stream()
-							.filter(l -> l.getSkiResort().getId().equals(resort.getId()))
-							.filter(l -> l.getName().equalsIgnoreCase(lift.getName()))
-							.findFirst()
-							.orElse(null);
-					if (existingLift != null && existingLift.getIsOpen() != lift.getIsOpen())
+				try {
+					SkiResortInfrastructure bergfexInfrastructureStatus;
+					try
 					{
-						existingLift.setIsOpen(lift.getIsOpen());
-						existingLift.setLastStatusChange(lift.getLastStatusChange());
-						_skiResortLiftRepository.save(existingLift);
-
-						CreateNotificationRequest notificationRequest = new CreateNotificationRequest();
-						notificationRequest.setTitle("Lift Status Changed at " + resort.getName());
-						notificationRequest.setMessage("The lift '" + lift.getName() + "' is now " + (lift.getIsOpen() ? "OPEN" : "CLOSED") + ".");
-						_notificationService.createNotification(notificationRequest);
-
-					} else if (existingLift == null)
+						bergfexInfrastructureStatus = new BergfexSkiResortSite(resort).scrapeAllInfrastructureStatus(page);
+					} catch (TimeoutError e)
 					{
 						System.out.println("Timeout waiting for status table for ski resort: " + resort.getName());
 						failCount++;
@@ -103,20 +82,29 @@ public class SkiResortService
 
 					int newLifts = 0;
 					int updatedLifts = 0;
-					for (SkiResortLift lift : bergfexInfrastructureStatus.getLifts())
+					for (SkiResortLift lift : bergfexInfrastructureStatus.getLiftsWithoutDuplicates())
 					{
-						existingSlope.setIsOpen(slope.getIsOpen());
-						existingSlope.setLastStatusChange(slope.getLastStatusChange());
-						_skiResortSlopeRepository.save(existingSlope);
+						SkiResortLift existingLift = existingLifts.stream()
+								.filter(l -> l.getName().equalsIgnoreCase(lift.getName()))
+								.findFirst()
+								.orElse(null);
+						if (existingLift != null && existingLift.getIsOpen() != lift.getIsOpen())
+						{
+							existingLift.setIsOpen(lift.getIsOpen());
+							existingLift.setLastStatusChange(lift.getLastStatusChange());
+							_skiResortLiftRepository.save(existingLift);
+							updatedLifts++;
 
-						CreateNotificationRequest notificationRequest = new CreateNotificationRequest();
-						notificationRequest.setTitle("Slope Status Changed at " + resort.getName());
-						notificationRequest.setMessage("The slope '" + slope.getName() + "' is now " + (slope.getIsOpen() ? "OPEN" : "CLOSED") + ".");
-						_notificationService.createNotification(notificationRequest);
+							CreateNotificationRequest notificationRequest = new CreateNotificationRequest();
+							notificationRequest.setTitle("Lift Status Changed at " + resort.getName());
+							notificationRequest.setMessage("The lift '" + lift.getName() + "' is now " + (lift.getIsOpen() ? "OPEN" : "CLOSED") + ".");
+							_notificationService.createNotification(notificationRequest);
 
-					} else if (existingSlope == null)
-					{
-						_skiResortSlopeRepository.save(slope);
+						} else if (existingLift == null)
+						{
+							_skiResortLiftRepository.save(lift);
+							newLifts++;
+						}
 					}
 
 					int newSlopes = 0;
@@ -133,6 +121,12 @@ public class SkiResortService
 							existingSlope.setLastStatusChange(slope.getLastStatusChange());
 							_skiResortSlopeRepository.save(existingSlope);
 							updatedSlopes++;
+
+							CreateNotificationRequest notificationRequest = new CreateNotificationRequest();
+							notificationRequest.setTitle("Slope Status Changed at " + resort.getName());
+							notificationRequest.setMessage("The slope '" + slope.getName() + "' is now " + (slope.getIsOpen() ? "OPEN" : "CLOSED") + ".");
+							_notificationService.createNotification(notificationRequest);
+
 						} else if (existingSlope == null)
 						{
 							_skiResortSlopeRepository.save(slope);
@@ -153,8 +147,6 @@ public class SkiResortService
 					failCount++;
 				}
 			}
-
-			logger.info("Lift and slopes status scrape completed");
 
 			browser.close();
 			System.out.println("Scraping completed: " + successCount + " successful, " + failCount + " failed");
