@@ -127,7 +127,7 @@ export const ResortDataProvider: React.FC<{ children: ReactNode }> = ({ children
         setError(null);
         try {
             // Use environment variable or default to production URL
-            const API_URL = import.meta.env.VITE_API_URL || 'https://snowsense.onrender.com';
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:7860';
             
             const [avalancheRes, liftsRes, slopesRes, weatherRes] = await Promise.all([
                 fetch(`${API_URL}/api/resorts/with-avalanche`),

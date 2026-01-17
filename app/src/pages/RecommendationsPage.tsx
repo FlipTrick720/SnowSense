@@ -54,7 +54,7 @@ const RecommendationsPage: React.FC = () => {
                 return;
             }
 
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:7860';
             const lat = userLocation.latitude;
             const lon = userLocation.longitude;
             const url = `${API_URL}/api/recommendation/skiresort?latitude=${lat}&longitude=${lon}`;

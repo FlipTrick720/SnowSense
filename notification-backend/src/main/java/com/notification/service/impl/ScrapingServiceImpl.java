@@ -35,6 +35,7 @@ public class ScrapingServiceImpl implements ScrapingService {
      * Duration: ~2 minutes (vs ~30 minutes for full scraping)
      * Allows Spring Boot to start and respond to health checks immediately
      */
+    @Override
     public void triggerFastStartupScraping() {
         logger.info("========================================");
         logger.info("Starting FAST startup scraping (no ski resort data)...");

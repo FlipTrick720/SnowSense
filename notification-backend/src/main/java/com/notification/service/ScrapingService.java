@@ -25,6 +25,7 @@ public interface ScrapingService {
      * @throws UnsupportedOperationException this method is not yet implemented
      */
     void triggerScraping();
+    void triggerFastStartupScraping();
     
     /**
      * Placeholder method for scheduling recurring scraping tasks.
