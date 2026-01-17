@@ -23,9 +23,26 @@ public class SkiResortInfrastructure
 		_slopes.add(slope);
 	}
 
-	public ArrayList<SkiResortLift> getLifts()
+	public ArrayList<SkiResortLift> getLiftsWithoutDuplicates()
 	{
-		return _lifts;
+		ArrayList<SkiResortLift> liftsWithoutDuplicates = new ArrayList<>();
+		for (SkiResortLift lift : _lifts)
+		{
+			boolean isDuplicate = false;
+			for (SkiResortLift uniqueLift : liftsWithoutDuplicates)
+			{
+				if (lift.getName().equals(uniqueLift.getName()))
+				{
+					isDuplicate = true;
+					break;
+				}
+			}
+			if (!isDuplicate)
+			{
+				liftsWithoutDuplicates.add(lift);
+			}
+		}
+		return liftsWithoutDuplicates;
 	}
 
 	public ArrayList<SkiResortSlope> getSlopes()

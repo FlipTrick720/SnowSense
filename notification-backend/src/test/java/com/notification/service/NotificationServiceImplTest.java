@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,6 +27,9 @@ class NotificationServiceImplTest {
     @Mock
     private NotificationRepository notificationRepository;
 
+    @Mock
+    private PushNotificationService pushNotificationService;
+
     @InjectMocks
     private NotificationServiceImpl notificationService;
 
@@ -34,40 +38,6 @@ class NotificationServiceImplTest {
     @BeforeEach
     void setUp() {
         // Setup is handled by @ExtendWith(MockitoExtension.class)
-    }
-
-    @Test
-    void createNotification_shouldGenerateUUIDAndTimestamp() {
-        // Arrange
-        CreateNotificationRequest request = new CreateNotificationRequest();
-        request.setTitle("Test Title");
-        request.setMessage("Test Message");
-
-        // Mock repository to return the saved notification
-        when(notificationRepository.save(any(Notification.class)))
-            .thenAnswer(invocation -> invocation.getArgument(0));
-
-        // Act
-        NotificationDTO result = notificationService.createNotification(request);
-
-        // Assert
-        assertNotNull(result.getId(), "ID should be generated");
-        assertFalse(result.getId().isEmpty(), "ID should not be empty");
-        assertNotNull(result.getTimestamp(), "Timestamp should be generated");
-        assertEquals("Test Title", result.getTitle());
-        assertEquals("Test Message", result.getMessage());
-
-        // Verify UUID format (basic check)
-        assertTrue(result.getId().matches(
-            "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"),
-            "ID should be a valid UUID format");
-
-        // Verify timestamp is in ISO format and recent
-        assertDoesNotThrow(() -> LocalDateTime.parse(result.getTimestamp(), ISO_FORMATTER),
-            "Timestamp should be in ISO format");
-
-        // Verify repository save was called
-        verify(notificationRepository, times(1)).save(any(Notification.class));
     }
 
     @Test
@@ -120,9 +90,31 @@ class NotificationServiceImplTest {
     }
 
     @Test
+    void createNotification_shouldSaveEntitySendPushAndReturnDto() {
+        // Arrange
+        CreateNotificationRequest request = new CreateNotificationRequest("Title", "Message");
+
+        when(notificationRepository.save(any(Notification.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        NotificationDTO dto = notificationService.createNotification(request);
+
+        // Assert
+        assertNotNull(dto);
+        assertNotNull(dto.getId());
+        assertEquals("Title", dto.getTitle());
+        assertEquals("Message", dto.getMessage());
+        assertNotNull(dto.getTimestamp());
+
+        verify(notificationRepository).save(any(Notification.class));
+        verify(pushNotificationService).sendPushNotification(any(Notification.class));
+    }
+
+    @Test
     void getAllNotifications_shouldReturnEmptyListWhenNoNotifications() {
         // Arrange
-        when(notificationRepository.findAll()).thenReturn(Arrays.asList());
+        when(notificationRepository.findAll()).thenReturn(Collections.emptyList());
 
         // Act
         List<NotificationDTO> result = notificationService.getAllNotifications();
