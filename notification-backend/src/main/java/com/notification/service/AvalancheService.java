@@ -33,7 +33,6 @@ public class AvalancheService {
     
     /**
      * Scrape avalanche data
-     * PRODUCTION: Changed from every 5 seconds to every hour to prevent memory exhaustion
      */
     @Scheduled(cron = "0 0 * * * *")  // Every hour
     //@Scheduled(cron = "0 0 8 * * *")  // Every day at 8:00 AM (for daily updates)

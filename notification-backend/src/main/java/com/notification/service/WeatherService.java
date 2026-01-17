@@ -35,9 +35,6 @@ public class WeatherService {
     }
     
     /**
-     * Scrape weather data for all ski resorts on application startup
-     */
-    /**
      * Scrape weather data for all ski resorts
      * Scheduled to run every 30 minutes
      */
