@@ -11,8 +11,11 @@ public class NotificationApplication {
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(NotificationApplication.class, args);
         
-        // Trigger scraping asynchronously so Spring Boot can start the HTTP server
-        // and respond to health checks while scraping happens in background
+        // Trigger FAST startup scraping asynchronously in background
+        // Only avalanche and weather data (~2 minutes)
+        // This allows Spring Boot to start the HTTP server immediately
+        // and respond to health checks within seconds
+        // Ski resort data is available from database and can be updated manually via /api/scrape
         ScrapingService scrapingService = context.getBean(ScrapingService.class);
         new Thread(() -> {
             try {
