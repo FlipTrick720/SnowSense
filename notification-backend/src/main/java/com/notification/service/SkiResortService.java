@@ -117,7 +117,7 @@ public class SkiResortService {
 						}
 					}
 
-					System.out.println("  ✓ " + resort.getName() + ": " + newLifts + " new lifts, " + updatedLifts + " updated lifts, " + newSlopes + " new slopes, " + updatedSlopes + " updated slopes");
+					System.out.println("    " + resort.getName() + ": " + newLifts + " new lifts, " + updatedLifts + " updated lifts, " + newSlopes + " new slopes, " + updatedSlopes + " updated slopes");
 					successCount++;
 					sleep(2000);
 					
