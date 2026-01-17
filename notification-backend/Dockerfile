@@ -28,18 +28,18 @@ WORKDIR /app
 # Copy the JAR from the builder stage
 COPY --from=builder /app/target/notification-backend-1.0.0.jar app.jar
 
-# Expose port
-EXPOSE 8080
+# Expose port (Hugging Face default is 7860)
+# The application will bind to the PORT environment variable
+EXPOSE 7860
 
 # Set environment variables
-ENV SERVER_PORT=8080
 ENV JAVA_OPTS="-Xmx512m -Xms256m"
 
 # Health check: curl /api/health endpoint
 # This ensures the container is marked as healthy immediately when Spring Boot starts
-# The scraping runs asynchronously in the background, so this doesn't wait for it to complete
+# It dynamically uses the PORT variable provided by the environment (e.g., Hugging Face)
 HEALTHCHECK --interval=10s --timeout=5s --start-period=15s --retries=3 \
-    CMD curl -f http://localhost:8080/api/health || exit 1
+    CMD sh -c 'curl -f http://localhost:${PORT:-7860}/api/health || exit 1'
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
