@@ -1,6 +1,7 @@
 package com.notification.service;
 
 import com.microsoft.playwright.*;
+import com.notification.dto.CreateNotificationRequest;
 import com.notification.model.SkiResort;
 import com.notification.model.SkiResortInfrastructure;
 import com.notification.model.SkiResortLift;
@@ -9,27 +10,30 @@ import com.notification.repository.SkiResortLiftRepository;
 import com.notification.repository.SkiResortRepository;
 import com.notification.repository.SkiResortSlopeRepository;
 import com.notification.service.skiResortSites.BergfexSkiResortSite;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-@Service
-public class SkiResortService {
+import java.util.List;
 
+@Service
+public class SkiResortService
+{
+	private static final Logger logger = LoggerFactory.getLogger(SkiResortService.class);
 	private final SkiResortRepository _skiResortRepository;
 	private final SkiResortLiftRepository _skiResortLiftRepository;
 	private final SkiResortSlopeRepository _skiResortSlopeRepository;
+	private final NotificationService _notificationService;
 
-	public SkiResortService(
-		SkiResortRepository skiResortRepository,
-		SkiResortLiftRepository skiResortLiftRepository,
-		SkiResortSlopeRepository skiResortSlopeRepository
-	) {
+	public SkiResortService(SkiResortRepository skiResortRepository, SkiResortLiftRepository skiResortLiftRepository, SkiResortSlopeRepository skiResortSlopeRepository, NotificationService notificationService)
+	{
 		_skiResortRepository = skiResortRepository;
 		_skiResortLiftRepository = skiResortLiftRepository;
 		_skiResortSlopeRepository = skiResortSlopeRepository;
+		_notificationService = notificationService;
 	}
 
 	/**
@@ -77,7 +81,7 @@ public class SkiResortService {
 
 					int newLifts = 0;
 					int updatedLifts = 0;
-					for (SkiResortLift lift : bergfexInfrastructureStatus.getLifts())
+					for (SkiResortLift lift : bergfexInfrastructureStatus.getLiftsWithoutDuplicates())
 					{
 						SkiResortLift existingLift = existingLifts.stream()
 								.filter(l -> l.getName().equalsIgnoreCase(lift.getName()))
@@ -89,6 +93,12 @@ public class SkiResortService {
 							existingLift.setLastStatusChange(lift.getLastStatusChange());
 							_skiResortLiftRepository.save(existingLift);
 							updatedLifts++;
+
+							CreateNotificationRequest notificationRequest = new CreateNotificationRequest();
+							notificationRequest.setTitle("Lift Status Changed at " + resort.getName());
+							notificationRequest.setMessage("The lift '" + lift.getName() + "' is now " + (lift.getIsOpen() ? "OPEN" : "CLOSED") + ".");
+							_notificationService.createNotification(notificationRequest);
+
 						} else if (existingLift == null)
 						{
 							_skiResortLiftRepository.save(lift);
@@ -110,6 +120,12 @@ public class SkiResortService {
 							existingSlope.setLastStatusChange(slope.getLastStatusChange());
 							_skiResortSlopeRepository.save(existingSlope);
 							updatedSlopes++;
+
+							CreateNotificationRequest notificationRequest = new CreateNotificationRequest();
+							notificationRequest.setTitle("Slope Status Changed at " + resort.getName());
+							notificationRequest.setMessage("The slope '" + slope.getName() + "' is now " + (slope.getIsOpen() ? "OPEN" : "CLOSED") + ".");
+							_notificationService.createNotification(notificationRequest);
+
 						} else if (existingSlope == null)
 						{
 							_skiResortSlopeRepository.save(slope);
