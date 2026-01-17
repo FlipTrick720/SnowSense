@@ -7,6 +7,8 @@ import com.notification.repository.SkiResortRepository;
 import com.notification.repository.WeatherDataRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -34,9 +36,9 @@ public class WeatherService {
     
     /**
      * Scrape weather data for all ski resorts
-     * Scheduled to run every 5 minutes
+     * Scheduled to run every 30 minutes
      */
-    @Scheduled(cron = "0 */5 * * * *")  // Every 5 minutes
+    @Scheduled(cron = "0 */30 * * * *")  // Every 30 minutes
     public void scrapeWeatherForAllResorts() {
         List<SkiResort> resorts = skiResortRepository.findAll();
         logger.info("Starting weather scrape for {} ski resorts", resorts.size());
@@ -63,15 +65,17 @@ public class WeatherService {
         OpenMeteoResponse response = restTemplate.getForObject(url, OpenMeteoResponse.class);
         
         if (response != null && response.getCurrent() != null) {
-            // Delete old weather data for this resort to keep only the latest
-            List<WeatherData> oldData = weatherDataRepository.findBySkiResortIdOrderByTimestampDesc(resort.getId());
-            if (!oldData.isEmpty()) {
+            WeatherData weatherData = mapToWeatherData(resort, response);
+            weatherDataRepository.save(weatherData);
+            
+            // Keep only the latest weather record for this resort (delete older ones)
+            List<WeatherData> allData = weatherDataRepository.findBySkiResortIdOrderByTimestampDesc(resort.getId());
+            if (allData.size() > 1) {
+                // Keep the first (newest), delete the rest
+                List<WeatherData> oldData = allData.subList(1, allData.size());
                 weatherDataRepository.deleteAll(oldData);
                 logger.info("Deleted {} old weather entries for {}", oldData.size(), resort.getName());
             }
-            
-            WeatherData weatherData = mapToWeatherData(resort, response);
-            weatherDataRepository.save(weatherData);
             
             printWeatherData(resort, weatherData);
         }

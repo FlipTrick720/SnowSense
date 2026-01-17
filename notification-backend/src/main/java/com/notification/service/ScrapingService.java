@@ -24,7 +24,8 @@ public interface ScrapingService {
      * @return scraped data object (to be defined in future implementation)
      * @throws UnsupportedOperationException this method is not yet implemented
      */
-    Object scrapeData(String source);
+    void triggerScraping();
+    void triggerFastStartupScraping();
     
     /**
      * Placeholder method for scheduling recurring scraping tasks.

@@ -87,9 +87,9 @@ public class AvalancheData {
     @Column(name = "wx_synopsis", length = 2000)
     private String wxSynopsis;
     
-    // Store complete JSON for detailed analysis
-    @Column(name = "raw_data", columnDefinition = "TEXT")
-    private String rawData;
+    // Store complete JSON for detailed analysis - DISABLED to save memory on Render
+    // @Column(name = "raw_data", columnDefinition = "TEXT")
+    // private String rawData;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;

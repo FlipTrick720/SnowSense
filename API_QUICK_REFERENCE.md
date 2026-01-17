@@ -1,77 +1,99 @@
 # API Quick Reference (AI Generated)
 
-## 🌤️ Weather API
-
-| Method | Endpoint | Description | Schedule |
-|--------|----------|-------------|----------|
-| GET | `/api/weather` | Get all weather data | - |
-| GET | `/api/weather/resort/{id}` | Get weather for specific resort | - |
-| POST | `/api/weather/scrape` | Trigger weather scrape | Auto: Every 5 min |
-
-## 🏔️ Avalanche API
-
-| Method | Endpoint | Description | Schedule |
-|--------|----------|-------------|----------|
-| GET | `/api/avalanche` | Get all bulletins | - |
-| GET | `/api/avalanche/current` | Get currently valid bulletins | - |
-| GET | `/api/avalanche/region/{code}` | Get bulletins by region code | - |
-| GET | `/api/avalanche/high-danger` | Get high danger bulletins | - |
-| POST | `/api/avalanche/scrape` | Trigger avalanche scrape | Auto: Daily 8 AM |
-
-## 🎿 Ski Resort + Avalanche Combined API
-
-| Method | Endpoint | Description | Use Case |
-|--------|----------|-------------|----------|
-| GET | `/api/resorts/with-avalanche` | All resorts with avalanche data | **Main endpoint for ML** |
-| GET | `/api/resorts/{id}/with-avalanche` | Single resort with avalanche data | Resort detail page |
-| GET | `/api/resorts/safe` | Only safe resorts (low/moderate) | Filter safe options |
-| GET | `/api/resorts/high-danger` | Resorts with high danger warnings | Safety alerts |
-
-## 🚡 Ski Resort Infrastructure API
-
-| Method | Endpoint | Description | Schedule |
-|--------|----------|-------------|----------|
-| GET | `/api/skiresort/lifts` | Get all lift data | - |
-| GET | `/api/skiresort/resort/{id}/lifts` | Get lifts for specific resort | - |
-| GET | `/api/skiresort/slopes` | Get all slope data | - |
-| GET | `/api/skiresort/resort/{id}/slopes` | Get slopes for specific resort | - |
-| GET | `/api/skiresort/scrape` | Trigger infrastructure scrape | Auto: Every hour |
-
-## 🔔 Notification API
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/notifications` | Create/send notification |
-| GET | `/api/notifications` | Get all notifications |
-| POST | `/api/notifications/subscribe` | Subscribe device token |
-| POST | `/api/notifications/unsubscribe` | Unsubscribe device token |
-
-## Recommendaction API
-
-| Method | Endpoint | Description | Default |
-|--------|----------|-------------|---------|
-| GET | `/api/recommendation/skiresort` | Get best resort by temperature | Target: -4°C |
-
-**Returns:** Resort with temperature closest to `targetTemp` (default: -4)
-Example for -2 C°: `GET http://localhost:8080/api/recommendation/skiresort?targetTemp=-2`
-
-## 🏥 Health Check
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/health` | Health check endpoint |
-
+This document provides a summary of the available API endpoints.
 
 ## Data Collection Schedule
 
-- **Weather**: Every 5 minutes (automatic)
-- **Avalanche**: Every 5 minutes (automatic)
-- **Ski Resort Infrastructure**: Every hour (automatic)
+- **Weather Data**: Every 30 minutes
+- **Avalanche Reports**: Every hour
+- **Ski Resort Infrastructure (Lifts & Slopes)**: Every hour
+
+Manual scraping can be triggered via the `POST /api/.../scrape` endpoints.
+
+---
+
+## Main APIs
+
+### Ski Resort & Avalanche Data
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/resorts/with-avalanche` | Get all resorts with current avalanche data. **Main endpoint for the frontend.** |
+| GET | `/api/resorts/{id}/with-avalanche` | Get a single resort with avalanche data. |
+| GET | `/api/resorts/safe` | Get resorts that are currently considered safe (low/moderate danger). |
+| GET | `/api/resorts/high-danger` | Get resorts with high danger warnings. |
+
+### Recommendation
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/recommendation/skiresort` | Recommends ski resorts based on user location. Expects a JSON body with `latitude` and `longitude`. |
+| GET | `/api/recommendation/skiresort` | Recommends ski resorts based on user location. Expects `latitude` and `longitude` as query parameters. |
+
+### Infrastructure (Lifts & Slopes)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/skiresort/lifts` | Get all lift statuses. |
+| GET | `/api/skiresort/slopes` | Get all slope statuses. |
+| GET | `/api/skiresort/resort/{id}/lifts` | Get lifts for a specific resort. |
+| GET | `/api/skiresort/resort/{id}/slopes` | Get slopes for a specific resort. |
+
+### Weather Data
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/weather` | Get all weather data. |
+| GET | `/api/weather/resort/{id}` | Get weather for a specific resort. |
+
+### Avalanche Data
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/avalanche` | Get all avalanche bulletins. |
+| GET | `/api/avalanche/current` | Get currently valid bulletins. |
+| GET | `/api/avalanche/region/{code}` | Get bulletins by region code (e.g., `AT-07-14`). |
+| GET | `/api/avalanche/high-danger` | Get bulletins with high danger warnings. |
+
+---
+
+## Notification API
+
+The notification system allows sending push notifications to subscribed users.
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/notifications/subscribe` | Subscribes a device to receive push notifications. |
+| POST | `/api/notifications/unsubscribe` | Unsubscribes a device. |
+| POST | `/api/notifications` | Creates and sends a notification to **all** subscribed devices. |
+| GET | `/api/notifications` | Get a list of all notifications sent. |
+
+**Important:** The current implementation broadcasts every created notification to all subscribed users. There is no user-specific targeting.
+
+---
+
+## Manual Scraping APIs
+
+These endpoints are useful for development and for forcing data updates.
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/conditions/scrape` | Triggers a full scrape of all data sources (avalanche, weather, and ski resort infrastructure). This can take a long time. |
+| POST | `/api/avalanche/scrape` | Triggers a scrape of avalanche data only. |
+| POST | `/api/weather/scrape` | Triggers a scrape of weather data only. |
+| GET | `/api/skiresort/scrape` | Triggers a scrape of ski resort infrastructure only. |
+
+---
+
+## Utility APIs
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health` | Health check endpoint for deployment platforms. Returns `{"status": "UP"}`. |
+
+---
 
 ## Database Access
 
-H2 Console: http://localhost:8080/h2-console
-- JDBC URL: `jdbc:h2:mem:snowsense`
-- Username: `sa`
-- Password: (empty)
+For local development, you can access the H2 in-memory database console:
+
+- **URL**: http://localhost:8080/h2-console
+- **JDBC URL**: `jdbc:h2:mem:snowsense`
+- **Username**: `sa`
+- **Password**: (leave empty)
 

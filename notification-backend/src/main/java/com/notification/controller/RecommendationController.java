@@ -1,17 +1,22 @@
 package com.notification.controller;
 
-import com.notification.model.SkiResort;
+import com.notification.dto.RecommendationRequest;
+import com.notification.dto.RecommendedResortDTO;
 import com.notification.service.RecommendationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/recommendation")
 public class RecommendationController {
 
+    private static final Logger logger = LoggerFactory.getLogger(RecommendationController.class);
     private final RecommendationService recommendationService;
 
     public RecommendationController(RecommendationService recommendationService) {
@@ -19,27 +24,44 @@ public class RecommendationController {
     }
 
     /**
-     * Get best recommended ski resort based on temperature proximity to -4°C
-     * GET /api/recommendation/skiresort
+     * Recommend ski resorts based on user location & conditions
+     * Supports both POST (with JSON body) and GET (with query parameters)
+     * 
+     * POST /api/recommendation/skiresort
+     * Body: { "latitude": 47.2, "longitude": 12.5 }
+     * 
+     * GET /api/recommendation/skiresort?latitude=47.2&longitude=12.5
      */
-    @GetMapping("/skiresort")
-    public ResponseEntity<Map<String, Object>> recommendResort(
-            @RequestParam(defaultValue = "-4") double targetTemp
+    @PostMapping("/skiresort")
+    public ResponseEntity<Map<String, Object>> recommendResortsPost(
+            @RequestBody RecommendationRequest request
     ) {
-        SkiResort recommended = recommendationService.getBestResortBasedOnTemperature(targetTemp);
+        return getRecommendations(request.getLatitude(), request.getLongitude());
+    }
 
-        Map<String, Object> response = new HashMap<>();
+    @GetMapping("/skiresort")
+    public ResponseEntity<Map<String, Object>> recommendResortsGet(
+            @RequestParam double latitude,
+            @RequestParam double longitude
+    ) {
+        logger.info("GET /api/recommendation/skiresort called with lat={}, lon={}", latitude, longitude);
+        return getRecommendations(latitude, longitude);
+    }
 
-        if (recommended == null) {
-            response.put("status", "error");
-            response.put("message", "No weather data available for recommendation");
-            return ResponseEntity.status(404).body(response);
+    private ResponseEntity<Map<String, Object>> getRecommendations(double latitude, double longitude) {
+        try {
+            List<RecommendedResortDTO> results =
+                    recommendationService.recommendResorts(latitude, longitude);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("count", results.size());
+            response.put("recommendations", results);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Error in getRecommendations: ", e);
+            throw e;
         }
-
-        response.put("status", "success");
-        response.put("targetTemperature", targetTemp);
-        response.put("recommendedResort", recommended);
-
-        return ResponseEntity.ok(response);
     }
 }

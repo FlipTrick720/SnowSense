@@ -1,17 +1,17 @@
-# Environment Variables Reference
+# Environment Variables Reference (AI Generated)
 
-## Local Development (Separate Services)
+## Local Development
 
-When running `mvn spring-boot:run` and `npm run dev` separately:
+When running the backend and frontend separately:
 
-**Backend** (`notification-backend/.env`):
+**Backend** (`snowsense/notification-backend/.env`):
 ```bash
 FIREBASE_SERVICE_ACCOUNT_PATH=/absolute/path/to/firebase-service-account.json
 SERVER_PORT=8080
 CORS_ALLOWED_ORIGINS=http://localhost:5173
 ```
 
-**Frontend** (`notification-frontend/.env`):
+**Frontend** (`snowsense/app/.env`):
 ```bash
 VITE_FIREBASE_API_KEY=your_api_key
 VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
@@ -23,18 +23,7 @@ VITE_FIREBASE_VAPID_KEY=your_vapid_key
 VITE_API_URL=http://localhost:8080
 ```
 
-## Local Testing (Packaged JAR)
-
-When running `./run-packaged-app.sh`:
-
-Uses the same `notification-backend/.env` but automatically updates CORS:
-```bash
-FIREBASE_SERVICE_ACCOUNT_PATH=/absolute/path/to/firebase-service-account.json
-SERVER_PORT=8080
-CORS_ALLOWED_ORIGINS=http://localhost:8080  # Updated automatically
-```
-
-## Production (Render/Railway)
+## Production (Render/Hugging Face)
 
 Set these in your deployment platform's environment variables:
 
@@ -45,7 +34,7 @@ FIREBASE_SERVICE_ACCOUNT_BASE64=<your-base64-encoded-json>
 # Server
 SERVER_PORT=8080
 
-# CORS - Use your production URL
+# CORS - Use your production frontend URL
 CORS_ALLOWED_ORIGINS=https://your-app.onrender.com
 ```
 
@@ -68,33 +57,34 @@ base64 -i firebase-service-account.json
 
 Copy the entire output (one long string) and use it as `FIREBASE_SERVICE_ACCOUNT_BASE64`.
 
-## Why Two Methods?
+## Why Two Methods for Firebase Credentials?
+
+The application supports two ways of providing the Firebase admin credentials to the backend:
 
 **File Path** (`FIREBASE_SERVICE_ACCOUNT_PATH`):
-- ✅ Easy for local development
-- ✅ Human-readable JSON file
-- ❌ Harder to deploy (need to upload file)
+- ✅ Easy for local development.
+- ✅ You can see the JSON file.
+- ❌ Harder to use in cloud environments where you can't easily upload files.
 
 **Base64** (`FIREBASE_SERVICE_ACCOUNT_BASE64`):
-- ✅ Perfect for cloud deployment
-- ✅ Just paste as environment variable
-- ✅ No file upload needed
-- ❌ Not human-readable
+- ✅ Perfect for cloud deployment (Render, Hugging Face, etc.).
+- ✅ You just need to copy and paste a single string.
+- ❌ The string is not human-readable.
 
-The app checks for base64 first, then falls back to file path. Use whichever is easier for your environment!
+The application will first try to use the `FIREBASE_SERVICE_ACCOUNT_BASE64` variable. If it's not present, it will fall back to using the `FIREBASE_SERVICE_ACCOUNT_PATH`.
 
 ## Troubleshooting
 
-**"Firebase not initialized" warning?**
-- Check that environment variable is set correctly
-- For file path: verify the file exists at that location
-- For base64: ensure the entire string was copied (no truncation)
+**"Firebase not initialized" warning:**
+- Make sure the environment variable you are using is set correctly.
+- For the file path method, verify that the path is correct and the file exists.
+- For the base64 method, ensure you have copied the entire string.
 
-**CORS errors in browser?**
-- Make sure `CORS_ALLOWED_ORIGINS` matches the URL you're accessing
-- Local dev: `http://localhost:5173` (separate services) or `http://localhost:8080` (packaged)
-- Production: Your actual Render/Railway URL
+**CORS errors in browser:**
+- Make sure `CORS_ALLOWED_ORIGINS` on the backend matches the URL of the frontend.
+- For local development, this is usually `http://localhost:5173`.
+- For production, it will be your actual frontend URL.
 
-**Port already in use?**
-- Change `SERVER_PORT` to a different port (e.g., 8081)
-- Or stop other services using port 8080
+**Port already in use:**
+- Change `SERVER_PORT` in your backend's `.env` file to a different port (e.g., 8081).
+- Alternatively, find and stop the other process that is using port 8080.

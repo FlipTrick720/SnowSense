@@ -34,8 +34,8 @@ public class AvalancheService {
     /**
      * Scrape avalanche data
      */
-    //@Scheduled(cron = "0 0 8 * * *")  // Every day at 8:00 AM
-    @Scheduled(cron = "0 */5 * * * *")  // for test purposes
+    @Scheduled(cron = "0 0 * * * *")  // Every hour
+    //@Scheduled(cron = "0 0 8 * * *")  // Every day at 8:00 AM (for daily updates)
     public void scrapeAvalancheData() {
         logger.info("Starting avalanche data scrape");
         
@@ -143,24 +143,24 @@ public class AvalancheService {
             builder.tendencyType(bulletin.getTendency().get(0).getTendencyType());
         }
         
-        // Store raw JSON
-        try {
-            builder.rawData(objectMapper.writeValueAsString(bulletin));
-        } catch (Exception e) {
-            logger.warn("Failed to serialize bulletin to JSON: {}", e.getMessage());
-        }
+        // Store raw JSON - DISABLED to save memory on Render
+        // try {
+        //     builder.rawData(objectMapper.writeValueAsString(bulletin));
+        // } catch (Exception e) {
+        //     logger.warn("Failed to serialize bulletin to JSON: {}", e.getMessage());
+        // }
         
         return builder.build();
     }
 
-    private void extractDangerRatings(List<CAAMLResponse.DangerRating> ratings, 
+    protected void extractDangerRatings(List<CAAMLResponse.DangerRating> ratings, 
                                       AvalancheData.AvalancheDataBuilder builder) {
-        // Get main danger level (usually first rating or "all_day")
+        // Get main danger level (highest for the day)
         CAAMLResponse.DangerRating mainRating = ratings.stream()
                 .filter(r -> r.getValidTimePeriod() == null || 
                            "all_day".equals(r.getValidTimePeriod()) ||
                            "earlier".equals(r.getValidTimePeriod()))
-                .findFirst()
+                .max(this::compareDangerRatings)
                 .orElse(ratings.get(0));
         
         builder.dangerLevel(mainRating.getMainValue());
@@ -182,6 +182,28 @@ public class AvalancheService {
                     builder.dangerLevelAfternoon(afternoonRating.getMainValue())
                 );
     }
+
+    protected int compareDangerRatings(CAAMLResponse.DangerRating r1, CAAMLResponse.DangerRating r2) {
+        return getDangerLevelOrdinal(r1.getMainValue()) - getDangerLevelOrdinal(r2.getMainValue());
+    }
+
+    protected int getDangerLevelOrdinal(String dangerLevel) {
+        switch (dangerLevel) {
+            case "low":
+                return 1;
+            case "moderate":
+                return 2;
+            case "considerable":
+                return 3;
+            case "high":
+                return 4;
+            case "very_high":
+                return 5;
+            default:
+                return 0;
+        }
+    }
+    
     
     private void extractAvalancheProblems(List<CAAMLResponse.AvalancheProblem> problems,
                                          AvalancheData.AvalancheDataBuilder builder) {

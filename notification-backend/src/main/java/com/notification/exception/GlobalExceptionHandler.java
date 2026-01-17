@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGenericErrors(Exception ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 "An unexpected error occurred",
-                List.of(ex.getMessage())
+                List.of(ex.getMessage() != null ? ex.getMessage() : "Unknown error")
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    @RequestMapping("/error")
+    public ResponseEntity<ErrorResponse> handleError() {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "Server error",
+                List.of("An unexpected error occurred. Please try again later.")
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
