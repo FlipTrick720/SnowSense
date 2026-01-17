@@ -1,6 +1,7 @@
 ## Commands
 **/notification-backend**$ mvn spring-boot:run
-**/notification-frontend**$ npm run dev
+**/app**$ npm run dev
+**/notification-backend**$ mvn test
 
 ## Environment Setup
  **Backend Server**: Spring Boot application running on http://localhost:8080
