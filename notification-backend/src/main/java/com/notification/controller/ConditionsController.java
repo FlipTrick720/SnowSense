@@ -2,6 +2,7 @@ package com.notification.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.notification.service.ScrapingService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,8 +16,11 @@ import java.util.Map;
 @RequestMapping("/api/conditions")
 public class ConditionsController {
     
-    // TODO: Inject services when logic is implemented
-    // private final ConditionsService conditionsService;
+    private final ScrapingService scrapingService;
+    
+    public ConditionsController(ScrapingService scrapingService) {
+        this.scrapingService = scrapingService;
+    }
     
     /**
      * Get combined weather and avalanche conditions for all resorts
@@ -49,17 +53,30 @@ public class ConditionsController {
     }
     
     /**
-     * Trigger scraping of both weather and avalanche data
+     * Trigger FULL scraping including ski resort infrastructure
      * POST /api/conditions/scrape
      * 
+     * This endpoint triggers a complete scraping of:
+     * - Avalanche data
+     * - Weather data for all resorts
+     * - Ski resort infrastructure (lifts and slopes)
+     * 
+     * Warning: This can take 25-30 minutes to complete
+     * Use after deployment to populate ski resort data
      */
     @PostMapping("/scrape")
     public ResponseEntity<Map<String, String>> triggerScrape() {
+        // Run full scraping asynchronously so endpoint responds immediately
+        new Thread(() -> {
+            scrapingService.triggerScraping();
+        }).start();
+        
         Map<String, String> response = new HashMap<>();
-        response.put("status", "not_implemented");
-        response.put("message", "Combined scrape trigger - logic to be implemented");
-        response.put("description", "Will trigger both weather and avalanche scraping");
-        response.put("note", "Avalanche: daily at 8 AM, Weather: every 15 min");
-        return ResponseEntity.ok(response);
+        response.put("status", "started");
+        response.put("message", "Full scraping sequence initiated in background");
+        response.put("duration", "25-30 minutes (approximately)");
+        response.put("includes", "Avalanche data, Weather data, Ski resort infrastructure");
+        response.put("note", "Server continues to function normally while scraping runs");
+        return ResponseEntity.accepted().body(response);
     }
 }

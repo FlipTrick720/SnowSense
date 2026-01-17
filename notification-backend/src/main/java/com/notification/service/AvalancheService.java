@@ -34,8 +34,8 @@ public class AvalancheService {
     /**
      * Scrape avalanche data
      */
-    //@Scheduled(cron = "0 0 8 * * *")  // Every day at 8:00 AM
-    @Scheduled(cron = "0 */5 * * * *")  // for test purposes
+    @Scheduled(cron = "0 0 * * * *")  // Every hour
+    //@Scheduled(cron = "0 0 8 * * *")  // Every day at 8:00 AM (for daily updates)
     public void scrapeAvalancheData() {
         logger.info("Starting avalanche data scrape");
         
@@ -143,12 +143,12 @@ public class AvalancheService {
             builder.tendencyType(bulletin.getTendency().get(0).getTendencyType());
         }
         
-        // Store raw JSON
-        try {
-            builder.rawData(objectMapper.writeValueAsString(bulletin));
-        } catch (Exception e) {
-            logger.warn("Failed to serialize bulletin to JSON: {}", e.getMessage());
-        }
+        // Store raw JSON - DISABLED to save memory on Render
+        // try {
+        //     builder.rawData(objectMapper.writeValueAsString(bulletin));
+        // } catch (Exception e) {
+        //     logger.warn("Failed to serialize bulletin to JSON: {}", e.getMessage());
+        // }
         
         return builder.build();
     }

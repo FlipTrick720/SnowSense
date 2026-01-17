@@ -41,7 +41,6 @@ public class SkiResortService
 	 * Scheduled to run every hour
 	 */
 	@Scheduled(cron = "0 0 * * * *") // Every hour at :00
-	@EventListener(ApplicationReadyEvent.class)
 	public void scrapeSkiResortStatusForAllResorts()
 	{
 		System.out.println("Starting ski resort scraping for all resorts...");
@@ -134,7 +133,7 @@ public class SkiResortService
 						}
 					}
 
-					System.out.println("  ✓ " + resort.getName() + ": " + newLifts + " new lifts, " + updatedLifts + " updated lifts, " + newSlopes + " new slopes, " + updatedSlopes + " updated slopes");
+					System.out.println("    " + resort.getName() + ": " + newLifts + " new lifts, " + updatedLifts + " updated lifts, " + newSlopes + " new slopes, " + updatedSlopes + " updated slopes");
 					successCount++;
 					sleep(2000);
 					

@@ -152,7 +152,7 @@ public class ServiceCouplingFitnessFunction {
                 System.out.println("   Status:  WARNING (many repository dependencies)");
                 warnings.add(analysis);
             } else {
-                System.out.println("   Status: ✓ PASS");
+                System.out.println("   Status: PASS");
                 passed.add(analysis);
             }
             System.out.println();
@@ -163,7 +163,7 @@ public class ServiceCouplingFitnessFunction {
         System.out.println("  RESULTS");
         System.out.println("=".repeat(60));
         System.out.println("Total Services Analyzed: " + analyses.size());
-        System.out.println("✓ Passed: " + passed.size());
+        System.out.println(" Passed: " + passed.size());
         System.out.println("!  Warnings: " + warnings.size());
         System.out.println("!!! Violations: " + violations.size());
         System.out.println();
@@ -192,7 +192,7 @@ public class ServiceCouplingFitnessFunction {
         }
 
         if (violations.isEmpty() && warnings.isEmpty()) {
-            System.out.println("✓ ALL CHECKS PASSED");
+            System.out.println("ALL CHECKS PASSED");
             System.out.println();
         }
 

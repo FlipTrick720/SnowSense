@@ -1,11 +1,12 @@
 import React from 'react';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/react';
 import { Route, Redirect } from 'react-router-dom';
-import { home, search, settings } from 'ionicons/icons';
+import { home, search, settings, star } from 'ionicons/icons';
 
 import HomePage from './HomePage';
 import SearchPage from './SearchPage';
 import SettingsPage from './SettingsPage';
+import RecommendationsPage from './RecommendationsPage';
 
 const Tabs: React.FC = () => {
     return (
@@ -20,6 +21,10 @@ const Tabs: React.FC = () => {
                     <SearchPage />
                 </Route>
 
+                <Route exact path="/app/recommendations">
+                    <RecommendationsPage />
+                </Route>
+
                 <Route exact path="/app/settings">
                     <SettingsPage />
                 </Route>
@@ -30,6 +35,11 @@ const Tabs: React.FC = () => {
                <IonTabButton tab="home" href="/app/home">
                     <IonIcon icon={home} />
                     <IonLabel>Home</IonLabel>
+                </IonTabButton>
+
+                <IonTabButton tab="recommendations" href="/app/recommendations">
+                    <IonIcon icon={star} />
+                    <IonLabel>Recommendations</IonLabel>
                 </IonTabButton>
 
                 <IonTabButton tab="search" href="/app/search">

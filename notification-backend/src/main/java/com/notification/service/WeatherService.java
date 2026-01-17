@@ -35,17 +35,8 @@ public class WeatherService {
     }
     
     /**
-     * Scrape weather data for all ski resorts on application startup
-     */
-    @EventListener(ApplicationReadyEvent.class)
-    public void scrapeWeatherOnStartup() {
-        logger.info("Application started - triggering initial weather scrape");
-        scrapeWeatherForAllResorts();
-    }
-    
-    /**
      * Scrape weather data for all ski resorts
-     * Scheduled to run every 30 minutes (runs on startup via @EventListener)
+     * Scheduled to run every 30 minutes
      */
     @Scheduled(cron = "0 */30 * * * *")  // Every 30 minutes
     public void scrapeWeatherForAllResorts() {
