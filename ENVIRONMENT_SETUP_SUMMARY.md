@@ -2,144 +2,97 @@
 
 ## ✅ What Was Done
 
-Your project now uses professional environment variable management!
+This project uses professional environment variable management.
 
 ### Files Created
 
-**Frontend:**
+**Frontend (`snowsense/app`):**
 - ✅ `.env` - Your actual credentials (NOT in git)
 - ✅ `.env.example` - Template for team members (IN git)
-- ✅ `generate-sw.js` - Script to generate service worker with env vars
-- ✅ `firebase-messaging-sw.template.js` - Template for service worker
 
-**Backend:**
+**Backend (`snowsense/notification-backend`):**
 - ✅ `.env` - Your actual credentials (NOT in git)
 - ✅ `.env.example` - Template for team members (IN git)
 
 **Documentation:**
 - ✅ `ENV_SETUP_GUIDE.md` - Complete setup guide
-- ✅ `GIT_PUSH_CHECKLIST.md` - Pre-push checklist
+- ✅ `ENV_VARS_REFERENCE.md` - Quick reference for all variables
 - ✅ `README.md` - Project overview
 - ✅ `ENVIRONMENT_SETUP_SUMMARY.md` - This file
 
 ### Files Modified
 
 **Frontend:**
-- ✅ `src/config/firebase.js` - Now uses `import.meta.env.VITE_*`
-- ✅ `src/services/pushNotificationService.js` - Now uses `import.meta.env.VITE_*`
-- ✅ `package.json` - Added `generate-sw` script
+- ✅ `src/main.tsx` - Now uses `import.meta.env.VITE_*` for Firebase config.
 
 **Backend:**
-- ✅ `src/main/resources/application.properties` - Now uses `${ENV_VAR}`
-- ✅ `pom.xml` - Added `spring-dotenv` dependency
+- ✅ `src/main/resources/application.properties` - Now uses `${ENV_VAR}`.
+- ✅ `pom.xml` - Added `spring-dotenv` dependency to load `.env` files.
 
 **Root:**
-- ✅ `.gitignore` - Excludes secrets
+- ✅ `.gitignore` - Excludes secrets like `.env` files and `firebase-service-account.json`.
 
 ## 🔒 What's Protected
 
-These files are now **excluded from git** (safe):
-- `.env` files (all environments)
-- `firebase-service-account.json`
-- `notification-frontend/public/firebase-messaging-sw.js` (generated)
+These files are now **excluded from git** and should never be committed:
+- All `.env` files.
+- `firebase-service-account.json`.
 
-These files are **included in git** (safe):
-- `.env.example` files (templates only)
-- `firebase-messaging-sw.template.js` (template only)
-- All source code (uses env vars, not hardcoded values)
+These files are **included in git** (safe to commit):
+- All `.env.example` files (they contain templates, not real secrets).
+- All source code that reads environment variables.
 
 ## 🚀 How It Works
 
 ### Frontend
 
-**Development:**
-```bash
-npm run dev
-```
-1. Loads `.env` file
-2. Runs `generate-sw.js` to create service worker with env vars
-3. Starts Vite dev server
-4. Vite injects `import.meta.env.VITE_*` variables at build time
+**Development (`npm run dev`):**
+1. Vite loads the `.env` file from `snowsense/app`.
+2. Vite injects the `import.meta.env.VITE_*` variables into the application at build time.
 
-**Production:**
-```bash
-npm run build
-```
-1. Same process as dev
-2. Creates optimized production build
-3. Env vars are baked into the bundle
+**Production (`npm run build`):**
+1. Your deployment platform (e.g., Render) sets the environment variables.
+2. Vite uses these variables to create an optimized production build.
 
 ### Backend
 
-**Development:**
-```bash
-mvn spring-boot:run
-```
-1. `spring-dotenv` loads `.env` file automatically
-2. Spring Boot replaces `${ENV_VAR}` with actual values
-3. Application starts with correct configuration
+**Development (`mvn spring-boot:run`):**
+1. The `spring-dotenv` library loads the `.env` file from `snowsense/notification-backend`.
+2. Spring Boot replaces placeholders like `${SERVER_PORT}` in `application.properties` with the actual values.
 
 **Production:**
-- Set environment variables in your hosting platform
-- Spring Boot reads from system environment
-- No `.env` file needed in production
+1. Your deployment platform sets the environment variables.
+2. Spring Boot reads the variables directly from the system environment.
 
 ## 📋 Quick Reference
 
-### Frontend Environment Variables
+### Frontend Environment Variables (`snowsense/app/.env`)
 
 ```bash
-# Firebase Config
 VITE_FIREBASE_API_KEY=your_key
 VITE_FIREBASE_AUTH_DOMAIN=your_domain
 VITE_FIREBASE_PROJECT_ID=your_project
 VITE_FIREBASE_STORAGE_BUCKET=your_bucket
 VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
-
-# FCM
 VITE_FIREBASE_VAPID_KEY=your_vapid_key
-
-# API
 VITE_API_URL=http://localhost:8080
 ```
 
-### Backend Environment Variables
+### Backend Environment Variables (`snowsense/notification-backend/.env`)
 
 ```bash
-# Firebase
 FIREBASE_SERVICE_ACCOUNT_PATH=/path/to/key.json
-
-# Server
 SERVER_PORT=8080
-
-# CORS
 CORS_ALLOWED_ORIGINS=http://localhost:5173
 ```
 
-## 🎯 For New Team Members
-
-1. Clone the repo
-2. Copy `.env.example` to `.env` in both frontend and backend
-3. Get credentials from your own Firebase account.
-4. Fill in the `.env` files
-5. Run the app
-
-See [ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md) for detailed instructions.
-
 ## 🎓 Best Practices Implemented
 
-1. ✅ **Separation of config and code** - 12-factor app principle
-2. ✅ **Never commit secrets** - Industry standard
-3. ✅ **Environment-specific configuration** - Dev/staging/prod
-4. ✅ **Template files for team** - .env.example files
-5. ✅ **Automated generation** - Service worker script
-6. ✅ **Documentation** - Comprehensive guides
-7. ✅ **Security by default** - .gitignore configured
-
-## 🚨 Important Reminders
-
-- **Never commit `.env` files** - They contain real secrets
-- **Never commit `firebase-service-account.json`** - It's like a password
-- **Always use `.env.example`** - For team members to copy
+1. ✅ **Separation of config from code** (a core principle of the 12-factor app).
+2. ✅ **No secrets in version control**.
+3. ✅ **Environment-specific configuration** (development vs. production).
+4. ✅ **Template files for easy setup** (`.env.example`).
+5. ✅ **Clear documentation** for setup and reference.
+6. ✅ **Security by default** (secrets are ignored in `.gitignore`).
 
