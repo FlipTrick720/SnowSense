@@ -29,12 +29,35 @@ import '@ionic/react/css/palettes/dark.system.css';
 /* Theme variables */
 import './theme/variables.css';
 import Tabs from "./pages/Tabs";
-import React from "react";
+import React, { useEffect } from "react";
 import ResortPage from "./pages/ResortPage"; 
 import { ResortDataProvider } from './context/ResortDataContext';
+import { setupForegroundMessageListener, isPushSubscribed, subscribeToPushNotifications } from './pushNotificationService';
 setupIonicReact();
 
-const App: React.FC = () => (
+const App: React.FC = () => {
+  useEffect(() => {
+    const initNotifications = async () => {
+      // If user has previously subscribed, re-register/refresh token
+      if (isPushSubscribed()) {
+        try {
+          console.log('User is subscribed to notifications, refreshing token...');
+          await subscribeToPushNotifications();
+        } catch (error) {
+          console.error('Error refreshing notification subscription:', error);
+        }
+      }
+
+      // Setup listener for foreground messages
+      setupForegroundMessageListener((payload: any) => {
+        console.log('Foreground Message:', payload);
+      });
+    };
+
+    initNotifications();
+  }, []);
+
+  return (
   <IonApp>
     <ResortDataProvider>
       <IonReactRouter>
@@ -56,6 +79,7 @@ const App: React.FC = () => (
       </IonReactRouter>
     </ResortDataProvider>
   </IonApp>
-);
+  );
+};
 
 export default App;
