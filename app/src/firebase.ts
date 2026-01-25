@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { getMessaging, getToken, onMessage, deleteToken } from 'firebase/messaging';
 
 // Firebase configuration from environment variables
 const firebaseConfig = {
@@ -17,6 +17,6 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase Cloud Messaging
 const messaging = getMessaging(app);
 
-export { messaging, getToken, onMessage };
+export { messaging, getToken, onMessage, deleteToken };
 export default app;
 

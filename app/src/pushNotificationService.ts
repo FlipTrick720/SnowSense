@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { messaging, getToken, onMessage } from './firebase';
+import { messaging, getToken, onMessage, deleteToken } from './firebase';
 import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
@@ -143,16 +143,24 @@ export const unsubscribeFromPushNotifications = async () => {
     try {
         const token = localStorage.getItem('fcm_token');
 
-        if (!token) {
-            throw new Error('No FCM token found');
+        if (token) {
+            // 1. Unregister with backend
+            await axios.post(`${API_BASE_URL}/api/notifications/unsubscribe`, { token });
+
+            // 2. Invalidate token in Firebase
+            await deleteToken(messaging);
         }
 
-        // Unregister token with backend
-        await axios.post(`${API_BASE_URL}/api/notifications/unsubscribe`, {
-            token
-        });
+        // 3. Force unregister service worker to ensure a clean state
+        if ('serviceWorker' in navigator) {
+            const registration = await navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js');
+            if (registration) {
+                await registration.unregister();
+                console.log('Service worker unregistered');
+            }
+        }
 
-        // Clear local storage
+        // 4. Clear local state
         localStorage.removeItem('fcm_token');
         localStorage.removeItem('push_subscribed');
 

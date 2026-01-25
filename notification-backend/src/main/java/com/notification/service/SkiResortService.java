@@ -56,14 +56,15 @@ public class SkiResortService
 			BrowserContext context = browser.newContext(
 				new Browser.NewContextOptions().setIgnoreHTTPSErrors(true)
 			);
-			Page page = context.newPage();
 
 			List<SkiResort> resorts = _skiResortRepository.findAll();
 			System.out.println("Found " + resorts.size() + " resorts to scrape");
 			
 			for (SkiResort resort : resorts)
 			{
+				Page page = null;
 				try {
+					page = context.newPage();
 					SkiResortInfrastructure bergfexInfrastructureStatus;
 					try
 					{
@@ -144,6 +145,10 @@ public class SkiResortService
 				} catch (Exception e) {
 					System.err.println("Error scraping " + resort.getName() + ": " + e.getMessage());
 					failCount++;
+				} finally {
+					if (page != null) {
+						page.close();
+					}
 				}
 			}
 
