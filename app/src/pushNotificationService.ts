@@ -28,20 +28,20 @@ export const requestNotificationPermission = async () => {
  */
 export const getFCMToken = async () => {
     try {
-        console.log('🔍 Starting FCM token retrieval...');
+        console.log('Starting FCM token retrieval...');
 
         // Check if service worker is supported
         if (!('serviceWorker' in navigator)) {
             throw new Error('Service workers are not supported in this browser');
         }
-        console.log('✅ Service workers supported');
+        console.log('Service workers supported');
 
         // Register service worker
-        console.log('📝 Registering service worker...');
+        console.log('Registering service worker...');
         const registration = await navigator.serviceWorker.register(
             '/firebase-messaging-sw.js'
         );
-        console.log('✅ Service Worker registered:', registration);
+        console.log('Service Worker registered:', registration);
 
         // If there's a waiting service worker, activate it immediately
         if (registration.waiting) {
@@ -51,16 +51,16 @@ export const getFCMToken = async () => {
             await new Promise((resolve) => {
                 navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true });
             });
-            console.log('✅ Service worker activated');
+            console.log('Service worker activated');
         }
 
         // Wait for service worker to be ready
-        console.log('⏳ Waiting for service worker to be ready...');
+        console.log('Waiting for service worker to be ready...');
         await navigator.serviceWorker.ready;
-        console.log('✅ Service worker ready');
+        console.log('Service worker ready');
 
         // Get FCM token
-        console.log('🔑 Requesting FCM token with VAPID key...');
+        console.log('Requesting FCM token with VAPID key...');
         console.log('VAPID Key length:', VAPID_KEY.length);
         console.log('VAPID Key (first 20 chars):', VAPID_KEY.substring(0, 20) + '...');
 
@@ -71,21 +71,21 @@ export const getFCMToken = async () => {
         });
 
         const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('⏱️ FCM token request timed out after 30 seconds. Possible issues: 1) Check service worker console for errors, 2) Verify Firebase project has Cloud Messaging enabled, 3) Check Network tab for failed requests to Firebase')), 30000);
+            setTimeout(() => reject(new Error('FCM token request timed out after 30 seconds. Possible issues: 1) Check service worker console for errors, 2) Verify Firebase project has Cloud Messaging enabled, 3) Check Network tab for failed requests to Firebase')), 30000);
         });
 
-        console.log('⏳ Waiting for FCM token (max 30s)...');
+        console.log('Waiting for FCM token (max 30s)...');
         const token = await Promise.race([tokenPromise, timeoutPromise]);
 
         console.log('token:', token);
         if (token) {
-            console.log('✅ FCM Token received:', token.substring(0, 20) + '...');
+            console.log('FCM Token received:', token.substring(0, 20) + '...');
             return token;
         } else {
             throw new Error('No registration token available. Check Firebase project settings.');
         }
     } catch (error) {
-        console.error('❌ Error getting FCM token:', error);
+        console.error('Error getting FCM token:', error);
         console.error('Error details:', {
             name: error.name,
             message: error.message,

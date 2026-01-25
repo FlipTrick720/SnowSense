@@ -1,4 +1,5 @@
 #!/bin/bash
+#(AI Generated)
 
 echo "🏔️  Testing Avalanche Data API"
 echo "================================"

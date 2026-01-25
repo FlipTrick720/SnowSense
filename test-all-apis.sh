@@ -1,4 +1,5 @@
 #!/bin/bash
+#(AI Generated)
 
 BASE_URL="http://localhost:8080"
 
