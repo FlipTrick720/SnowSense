@@ -226,7 +226,7 @@ The system now displays **comprehensive avalanche safety information** for each 
 
 ## Data Update Schedule
 
-- **Avalanche data**: Updated **every 60 minutes** from official sources
+- **Avalanche data**: Updated **twice daily (08:30 and 17:30)** from official sources
 - **Weather data**: Updated hourly
 - **Lift/slope status**: Real-time monitoring
 

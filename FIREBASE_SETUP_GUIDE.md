@@ -44,7 +44,7 @@ const firebaseConfig = {
 
 ### 4.1 Update Firebase Config
 
-Edit `notification-frontend/src/config/firebase.js`:
+The frontend uses environment variables for Firebase configuration. Update `app/.env` with your Firebase config values.
 
 ```javascript
 const firebaseConfig = {
@@ -59,9 +59,7 @@ const firebaseConfig = {
 
 ### 4.2 Update Service Worker
 
-Edit `notification-frontend/public/firebase-messaging-sw.js`:
-
-Replace the Firebase config in the service worker with the same values:
+The service worker is automatically generated from the environment variables. No manual editing needed.
 
 ```javascript
 firebase.initializeApp({
@@ -76,7 +74,7 @@ firebase.initializeApp({
 
 ### 4.3 Update VAPID Key
 
-Edit `notification-frontend/src/services/pushNotificationService.js`:
+Add the VAPID key to `app/.env` as `VITE_FIREBASE_VAPID_KEY`.
 
 ```javascript
 const VAPID_KEY = 'YOUR_VAPID_KEY_FROM_STEP_3';
@@ -93,7 +91,7 @@ const VAPID_KEY = 'YOUR_VAPID_KEY_FROM_STEP_3';
 
 ### 5.2 Configure Application Properties
 
-Create or edit `notification-backend/src/main/resources/application.properties`:
+The backend uses environment variables. Create or edit `notification-backend/.env`:
 
 ```properties
 # Firebase Configuration
@@ -113,7 +111,7 @@ firebase.service-account-key-path=${FIREBASE_SERVICE_ACCOUNT_PATH}
 
 ### 5.3 Add Service Account to .gitignore
 
-Add to `notification-backend/.gitignore`:
+The Firebase service account file is already excluded in the root `.gitignore`.
 ```
 firebase-service-account.json
 *.json
@@ -133,7 +131,7 @@ You should see: `Firebase initialized successfully`
 ### 6.2 Start Frontend
 
 ```bash
-cd notification-frontend
+cd app
 npm run dev
 ```
 
