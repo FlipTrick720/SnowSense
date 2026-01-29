@@ -34,8 +34,8 @@ public class AvalancheService {
     /**
      * Scrape avalanche data
      */
-    @Scheduled(cron = "0 0 * * * *")  // Every hour
-    //@Scheduled(cron = "0 0 8 * * *")  // Every day at 8:00 AM (for daily updates)
+    @Scheduled(cron = "0 30 8 * * *")  // Every day at 08:30
+    @Scheduled(cron = "0 30 17 * * *")  // Every day at 17:30
     public void scrapeAvalancheData() {
         logger.info("Starting avalanche data scrape");
         
