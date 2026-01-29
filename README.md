@@ -16,14 +16,14 @@ Ski resort information system with real-time weather, avalanche warnings, and in
 
 ### Backend
 ```bash
-cd snowsense/notification-backend
+cd notification-backend
 mvn spring-boot:run
 ```
 Runs on http://localhost:8080
 
 ### Frontend
 ```bash
-cd snowsense/app
+cd app
 npm install
 npm run dev
 ```
@@ -32,11 +32,11 @@ Runs on http://localhost:5173
 ### Tests
 ```bash
 # Backend tests
-cd snowsense/notification-backend
+cd notification-backend
 mvn test
 
 # Frontend tests
-cd snowsense/app
+cd app
 npm test
 ```
 
@@ -70,7 +70,7 @@ npm test
 The backend automatically scrapes data from various sources at the following intervals:
 
 - **Weather Data**: Every 30 minutes
-- **Avalanche Reports**: Every hour
+- **Avalanche Reports**: Twice daily (08:30 and 17:30)
 - **Ski Resort Infrastructure (Lifts & Slopes)**: Every hour
 
 Manual scraping can also be triggered via API endpoints.

@@ -5,7 +5,7 @@ This document provides a summary of the available API endpoints.
 ## Data Collection Schedule
 
 - **Weather Data**: Every 30 minutes
-- **Avalanche Reports**: Every hour
+- **Avalanche Reports**: Twice daily (08:30 and 17:30)
 - **Ski Resort Infrastructure (Lifts & Slopes)**: Every hour
 
 Manual scraping can be triggered via the `POST /api/.../scrape` endpoints.
