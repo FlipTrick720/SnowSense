@@ -182,7 +182,7 @@ const RecommendationsPage: React.FC = () => {
                                 border: `2px solid ${getDangerColor(rec.dangerLevel) === 'success' ? '#2dd36f' : getDangerColor(rec.dangerLevel) === 'warning' ? '#ffc409' : '#eb445a'}`,
                                 cursor: 'pointer'
                             }}
-                            onClick={() => history.push(`/app/resort/${rec.resort.id}`)}
+                            onClick={() => history.push(`/resort/${rec.resort.id}`)}
                         >
                             <IonCardHeader>
                                 <IonGrid>
@@ -265,7 +265,7 @@ const RecommendationsPage: React.FC = () => {
                                     color="primary"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        history.push(`/app/resort/${rec.resort.id}`);
+                                        history.push(`/resort/${rec.resort.id}`);
                                     }}
                                     style={{ marginTop: '10px' }}
                                 >
